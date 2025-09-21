@@ -2,15 +2,70 @@ import { useState } from 'react';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import Button from '../components/button';
 import { useNavigate } from 'react-router-dom';
+import { serverUrl } from '../App';
+import axios from 'axios';
 
 const ForgotPassword = () => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [otp, setOtp] = useState('');
+
+  const handleSendOtp = async () => {
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/send-otp`,
+        {
+          email,
+        },
+        { withCredentials: true }
+      );
+      console.log('otp sent', result);
+      setStep(2);
+    } catch (error) {
+      console.error('Error sending otp', error);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/verify-otp`,
+        {
+          email,
+          otp,
+        },
+        { withCredentials: true }
+      );
+      console.log('otp verify', result);
+      setStep(3);
+    } catch (error) {
+      console.error('Error verify otp', error);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (newPassword != confirmPassword) {
+      return null;
+    }
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/reset-password`,
+        {
+          email,
+          newPassword,
+        },
+        { withCredentials: true }
+      );
+      console.log('reset password', result);
+      //   setStep(3);
+    } catch (error) {
+      console.error('Error sending otp', error);
+    }
+  };
 
   return (
     <div className='flex w-full items-center justify-center min-h-screen p-4 bg-[#fff9f6]'>
@@ -43,7 +98,7 @@ const ForgotPassword = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <Button text={'Send OTP'} onSubmit={() => {}} />
+            <Button text={'Send OTP'} onSubmit={handleSendOtp} />
           </div>
         )}
         {step === 2 && (
@@ -64,7 +119,7 @@ const ForgotPassword = () => {
                 onChange={(e) => setOtp(e.target.value)}
               />
             </div>
-            <Button text={'Verify'} onSubmit={() => {}} />
+            <Button text={'Verify'} onSubmit={handleVerifyOtp} />
           </div>
         )}
         {step === 3 && (
@@ -101,7 +156,7 @@ const ForgotPassword = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
-            <Button text={'Reset Password'} onSubmit={() => {}} />
+            <Button text={'Reset Password'} onSubmit={handleResetPassword} />
           </div>
         )}
       </div>
