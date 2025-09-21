@@ -5,6 +5,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { serverUrl } from '../App';
+import Button from '../components/button';
 
 const SignIn = () => {
   const primaryColor = '#ff4d2d';
@@ -97,17 +98,18 @@ const SignIn = () => {
         </div>
         <div
           className='text-right mb-4 text-[#ff4d2d] text-sm cursor-pointer'
-          onClick={() => navigate('forgot-password')}
+          onClick={() => navigate('/forgot-password')}
         >
           Forgot Password
         </div>
 
-        <button
+        {/* <button
           onClick={handleSignIn}
           className={`w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 cursor-pointer bg-[#ff4d2d] text-white hover:bg-[#e64323]`}
         >
           Sign In
-        </button>
+        </button> */}
+        <Button text={'Sign In'} onSubmit={handleSignIn} />
         <button className='w-full mt-4 cursor-pointer flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 border-gray-400 hover:bg-gray-100'>
           <FcGoogle size={20} />
           <span>Sign In with Google</span>

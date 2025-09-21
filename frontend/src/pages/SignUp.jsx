@@ -5,6 +5,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { serverUrl } from '../App';
+import Button from '../components/button';
 
 const SignUp = () => {
   const primaryColor = '#ff4d2d';
@@ -162,12 +163,13 @@ const SignUp = () => {
             ))}
           </div>
         </div>
-        <button
+        {/* <button
           onClick={handleSignUp}
           className={`w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 cursor-pointer bg-[#ff4d2d] text-white hover:bg-[#e64323]`}
         >
           Sign Up
-        </button>
+        </button> */}
+        <Button text={'Sign Up'} onSubmit={handleSignUp} />
         <button className='w-full mt-4 cursor-pointer flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 border-gray-400 hover:bg-gray-100'>
           <FcGoogle size={20} />
           <span>Sign up with Google</span>
