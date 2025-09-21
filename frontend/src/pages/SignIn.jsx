@@ -8,6 +8,8 @@ import { serverUrl } from '../App';
 import Button from '../components/button';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/userSlice';
 
 const SignIn = () => {
   const primaryColor = '#ff4d2d';
@@ -21,6 +23,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleGoogleAuth = async () => {
     setLoading(true);
@@ -31,7 +34,8 @@ const SignIn = () => {
       const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
         email: result.user.email,
       });
-      console.log('data', data);
+      //   console.log('data', data);
+      dispatch(setUserData(data));
       setError('');
     } catch (error) {
       console.error('Error google signup', error);
@@ -52,8 +56,9 @@ const SignIn = () => {
         },
         { withCredentials: true }
       );
-      console.log('result signin', result);
+      //   console.log('result signin', result);
       setError('');
+      dispatch(setUserData(result.data));
     } catch (error) {
       console.error('Error signin', error);
       setError(error?.response?.data?.message);
