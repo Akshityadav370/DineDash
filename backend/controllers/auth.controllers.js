@@ -41,7 +41,7 @@ export const signUp = async (req, res) => {
       httpOnly: true,
     });
 
-    return res.status(201).json(user);
+    return res.status(201).json(newUser);
   } catch (error) {
     return res.status(500).json(`Signup error ${error}`);
   }
@@ -153,5 +153,35 @@ export const resetPassword = async (req, res) => {
     return res.status(200).json({ message: 'Password reset successfully!' });
   } catch (error) {
     return res.status(500).json(`Error in Reset OTP: ${error}`);
+  }
+};
+
+export const googleAuth = async (req, res) => {
+  try {
+    const { fullName, email, mobile, role } = req.body;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        fullName,
+        email,
+        role,
+        mobile,
+      });
+    }
+
+    const token = await genToken(user._id);
+
+    res.cookie('token', token, {
+      secure: false,
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+
+    return res.status(201).json(user);
+  } catch (error) {
+    return res.status(500).json(`Google Auth error ${error}`);
   }
 };

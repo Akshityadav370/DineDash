@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { serverUrl } from '../App';
 import Button from '../components/button';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 const SignIn = () => {
   const primaryColor = '#ff4d2d';
@@ -17,8 +19,30 @@ const SignIn = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const handleGoogleAuth = async () => {
+    setLoading(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      console.log('google result', result);
+      const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
+        email: result.user.email,
+      });
+      console.log('data', data);
+      setError('');
+    } catch (error) {
+      console.error('Error google signup', error);
+      setError(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSignIn = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/signin`,
@@ -29,8 +53,12 @@ const SignIn = () => {
         { withCredentials: true }
       );
       console.log('result signin', result);
+      setError('');
     } catch (error) {
       console.error('Error signin', error);
+      setError(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,6 +96,7 @@ const SignIn = () => {
             style={{ border: `1px solid ${borderColor}` }}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 
@@ -87,6 +116,7 @@ const SignIn = () => {
               style={{ border: `1px solid ${borderColor}` }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
             <button
               onClick={() => setShowPassword(!showPassword)}
@@ -103,14 +133,15 @@ const SignIn = () => {
           Forgot Password
         </div>
 
-        {/* <button
-          onClick={handleSignIn}
-          className={`w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 cursor-pointer bg-[#ff4d2d] text-white hover:bg-[#e64323]`}
+        <Button text={'Sign In'} onSubmit={handleSignIn} loading={loading} />
+        {error && (
+          <p className='text-red-500 text-center my-[10px]'>*{error}</p>
+        )}
+        <button
+          onClick={handleGoogleAuth}
+          className='w-full mt-4 cursor-pointer flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 border-gray-400 hover:bg-gray-100'
+          disabled={loading}
         >
-          Sign In
-        </button> */}
-        <Button text={'Sign In'} onSubmit={handleSignIn} />
-        <button className='w-full mt-4 cursor-pointer flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 border-gray-400 hover:bg-gray-100'>
           <FcGoogle size={20} />
           <span>Sign In with Google</span>
         </button>

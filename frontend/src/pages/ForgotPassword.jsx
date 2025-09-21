@@ -14,7 +14,11 @@ const ForgotPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState();
   const [otp, setOtp] = useState('');
 
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+
   const handleSendOtp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/send-otp`,
@@ -24,13 +28,18 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       console.log('otp sent', result);
+      setError('');
       setStep(2);
     } catch (error) {
       console.error('Error sending otp', error);
+      setError(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleVerifyOtp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/verify-otp`,
@@ -42,12 +51,17 @@ const ForgotPassword = () => {
       );
       console.log('otp verify', result);
       setStep(3);
+      setError('');
     } catch (error) {
       console.error('Error verify otp', error);
+      setError(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleResetPassword = async () => {
+    setLoading(true);
     if (newPassword != confirmPassword) {
       return null;
     }
@@ -61,9 +75,13 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       console.log('reset password', result);
+      setError('');
       //   setStep(3);
     } catch (error) {
       console.error('Error sending otp', error);
+      setError(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,9 +114,17 @@ const ForgotPassword = () => {
                 style={{ border: `1px solid #ddd` }}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
-            <Button text={'Send OTP'} onSubmit={handleSendOtp} />
+            <Button
+              text={'Send OTP'}
+              onSubmit={handleSendOtp}
+              loading={loading}
+            />
+            {error && (
+              <p className='text-red-500 text-center my-[10px]'>*{error}</p>
+            )}
           </div>
         )}
         {step === 2 && (
@@ -117,9 +143,17 @@ const ForgotPassword = () => {
                 style={{ border: `1px solid #ddd` }}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
+                required
               />
             </div>
-            <Button text={'Verify'} onSubmit={handleVerifyOtp} />
+            <Button
+              text={'Verify'}
+              onSubmit={handleVerifyOtp}
+              loading={loading}
+            />
+            {error && (
+              <p className='text-red-500 text-center my-[10px]'>*{error}</p>
+            )}
           </div>
         )}
         {step === 3 && (
@@ -138,6 +172,7 @@ const ForgotPassword = () => {
                 style={{ border: `1px solid #ddd` }}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                required
               />
             </div>
             <div className='mb-4'>
@@ -154,9 +189,17 @@ const ForgotPassword = () => {
                 style={{ border: `1px solid #ddd` }}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                required
               />
             </div>
-            <Button text={'Reset Password'} onSubmit={handleResetPassword} />
+            <Button
+              text={'Reset Password'}
+              onSubmit={handleResetPassword}
+              loading={loading}
+            />
+            {error && (
+              <p className='text-red-500 text-center my-[10px]'>*{error}</p>
+            )}
           </div>
         )}
       </div>

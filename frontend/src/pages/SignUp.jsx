@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { serverUrl } from '../App';
 import Button from '../components/button';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 const SignUp = () => {
   const primaryColor = '#ff4d2d';
@@ -21,7 +23,11 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [mobile, setMobile] = useState('');
 
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+
   const handleSignUp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/signup`,
@@ -34,9 +40,39 @@ const SignUp = () => {
         },
         { withCredentials: true }
       );
+      setError(null);
       console.log('result signup', result);
     } catch (error) {
       console.error('Error signup', error);
+      setError(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleAuth = async () => {
+    setLoading(true);
+    if (!mobile) {
+      setError('Mobile No is required!');
+      return;
+    }
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      console.log('google result', result);
+      const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
+        fullName: result.user.displayName,
+        email: result.user.email,
+        mobile,
+        role,
+      });
+      console.log('data', data);
+      setError(null);
+    } catch (error) {
+      console.error('Error google signup', error);
+      setError(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,6 +110,7 @@ const SignUp = () => {
             style={{ border: `1px solid ${borderColor}` }}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+            required
           />
         </div>
         {/* Email */}
@@ -91,6 +128,7 @@ const SignUp = () => {
             style={{ border: `1px solid ${borderColor}` }}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
         {/* Mobile */}
@@ -108,6 +146,7 @@ const SignUp = () => {
             style={{ border: `1px solid ${borderColor}` }}
             value={mobile}
             onChange={(e) => setMobile(e.target.value)}
+            required
           />
         </div>
         {/* Password */}
@@ -126,6 +165,7 @@ const SignUp = () => {
               style={{ border: `1px solid ${borderColor}` }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
             <button
               onClick={() => setShowPassword(!showPassword)}
@@ -163,14 +203,16 @@ const SignUp = () => {
             ))}
           </div>
         </div>
-        {/* <button
-          onClick={handleSignUp}
-          className={`w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 cursor-pointer bg-[#ff4d2d] text-white hover:bg-[#e64323]`}
+        <Button text={'Sign Up'} onSubmit={handleSignUp} loading={loading} />
+        {error && (
+          <p className='text-red-500 text-center my-[10px]'>*{error}</p>
+        )}
+
+        <button
+          disabled={loading}
+          onClick={handleGoogleAuth}
+          className='w-full mt-4 cursor-pointer flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 border-gray-400 hover:bg-gray-100'
         >
-          Sign Up
-        </button> */}
-        <Button text={'Sign Up'} onSubmit={handleSignUp} />
-        <button className='w-full mt-4 cursor-pointer flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 border-gray-400 hover:bg-gray-100'>
           <FcGoogle size={20} />
           <span>Sign up with Google</span>
         </button>
