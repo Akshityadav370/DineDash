@@ -13,7 +13,7 @@ const isAuth = async (req, res, next) => {
         .status(404)
         .json({ message: 'Token not verified! Unauthorised!' });
     }
-    console.log('decodeToken', decodeToken);
+    // console.log('decodeToken', decodeToken);
     req.userId = decodeToken.userId;
     next();
   } catch (error) {

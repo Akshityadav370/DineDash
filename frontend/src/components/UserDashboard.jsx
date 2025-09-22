@@ -1,11 +1,5 @@
-import Nav from './Nav';
-
 const UserDashboard = () => {
-  return (
-    <>
-      <Nav />
-    </>
-  );
+  return <div>UserDashboard</div>;
 };
 
 export default UserDashboard;

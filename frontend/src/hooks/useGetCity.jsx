@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { useEffect } from 'react';
-import { serverUrl } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCity, setUserData } from '../redux/userSlice';
+import { setCity } from '../redux/userSlice';
 
 const useGetCity = () => {
   const dispatch = useDispatch();
