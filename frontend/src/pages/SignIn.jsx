@@ -30,13 +30,13 @@ const SignIn = () => {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-      console.log('google result', result);
+      //   console.log('google result', result);
       const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
         email: result.user.email,
       });
       //   console.log('data', data);
       dispatch(setUserData(data));
-      setError('');
+      setError(null);
     } catch (error) {
       console.error('Error google signup', error);
       setError(error?.response?.data?.message);
