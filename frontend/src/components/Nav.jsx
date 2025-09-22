@@ -12,15 +12,17 @@ import { TbReceipt2 } from 'react-icons/tb';
 
 const Nav = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { userData, city } = useSelector((state) => state.user);
   const { myShopData } = useSelector((state) => state.owner);
+
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     try {
-      const result = await axios.get(`${serverUrl}/api/auth/signout`, {
+      await axios.get(`${serverUrl}/api/auth/signout`, {
         withCredentials: true,
       });
       dispatch(setUserData(null));
@@ -147,12 +149,14 @@ const Nav = () => {
                     md:right-[10%] lg:right-[25%] w-[180px] bg-white shadow-2xl rounded-xl p-[20px] flex flex-col gap-[10px] z-[9999]`}
           >
             <div className='text-[17px] font-semibold'>{userData.fullName}</div>
-            <div
-              className='md:hidden text-[#ff4d2d] font-semibold cursor-pointer'
-              onClick={() => navigate('/my-orders')}
-            >
-              My Orders
-            </div>
+            {userData.role === 'user' && (
+              <div
+                className='md:hidden text-[#ff4d2d] font-semibold cursor-pointer'
+                onClick={() => navigate('/my-orders')}
+              >
+                My Orders
+              </div>
+            )}
 
             <div
               className='text-[#ff4d2d] font-semibold cursor-pointer'
