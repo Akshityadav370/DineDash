@@ -1,7 +1,6 @@
 import { IoIosArrowRoundBack } from 'react-icons/io';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { FaUtensils } from 'react-icons/fa';
 import { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import axios from 'axios';

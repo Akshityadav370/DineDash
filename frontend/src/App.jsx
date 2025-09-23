@@ -10,6 +10,8 @@ import useGetMyShop from './hooks/useGetMyShop';
 import CreateEditShop from './pages/CreateEditShop';
 import AddFoodItem from './pages/AddFoodItem';
 import EditFoodItem from './pages/EditFoodItem';
+import CartPage from './pages/CartPage';
+import CheckOut from './pages/CheckOut';
 
 export const serverUrl = 'http://localhost:8000';
 
@@ -48,6 +50,14 @@ function App() {
       <Route
         path='/edit-item/:itemId'
         element={userData ? <EditFoodItem /> : <Navigate to={'/signin'} />}
+      />
+      <Route
+        path='/cart'
+        element={userData ? <CartPage /> : <Navigate to={'/signin'} />}
+      />
+      <Route
+        path='/checkout'
+        element={userData ? <CheckOut /> : <Navigate to={'/signin'} />}
       />
     </Routes>
   );

@@ -14,7 +14,7 @@ const Nav = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { userData, city } = useSelector((state) => state.user);
+  const { userData, city, cartItems } = useSelector((state) => state.user);
   const { myShopData } = useSelector((state) => state.owner);
 
   const [showInfo, setShowInfo] = useState(false);
@@ -84,7 +84,12 @@ const Nav = () => {
             >
               <FiShoppingCart size={25} className='text-[#ff4d2d]' />
               <span className='absolute right-[-9px] top-[-12px] text-[#ff4d2d]'>
-                0
+                {cartItems
+                  ? cartItems.reduce(
+                      (acc, current) => acc + current.quantity,
+                      0
+                    )
+                  : 0}
               </span>
             </div>
             <button
