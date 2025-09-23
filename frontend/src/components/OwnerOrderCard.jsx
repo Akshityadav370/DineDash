@@ -1,8 +1,25 @@
+import axios from 'axios';
 import { MdPhone } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
+import { serverUrl } from '../App';
+import { updateOrderStatus } from '../redux/userSlice';
 
 function OwnerOrderCard({ data }) {
   const dispatch = useDispatch();
+
+  const handleUpdateStatus = async (orderId, shopId, status) => {
+    try {
+      await axios.post(
+        `${serverUrl}/api/order/update-status/${orderId}/${shopId}`,
+        { status },
+        { withCredentials: true }
+      );
+      dispatch(updateOrderStatus({ orderId, shopId, status }));
+      //   console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className='bg-white rounded-lg shadow p-4 space-y-4'>
@@ -63,7 +80,13 @@ function OwnerOrderCard({ data }) {
 
         <select
           className='rounded-md border px-3 py-1 text-sm focus:outline-none focus:ring-2 border-[#ff4d2d] text-[#ff4d2d]'
-          onChange={() => {}}
+          onChange={(e) =>
+            handleUpdateStatus(
+              data._id,
+              data.shopOrders.shop._id,
+              e.target.value
+            )
+          }
         >
           <option value=''>Change</option>
           <option value='pending'>Pending</option>

@@ -14,7 +14,7 @@ import { setLocation, setMapAddress } from '../redux/mapSlice';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { serverUrl } from '../App';
-import { setCartItems } from '../redux/userSlice';
+import { addMyOrder, setCartItems } from '../redux/userSlice';
 
 function RecenterMap({ location }) {
   const map = useMap();
@@ -89,7 +89,7 @@ const CheckOut = () => {
 
   const handlePlaceOrder = async () => {
     try {
-      await axios.post(
+      const result = await axios.post(
         `${serverUrl}/api/order/place-order`,
         {
           paymentMethod,
@@ -104,6 +104,7 @@ const CheckOut = () => {
         { withCredentials: true }
       );
       //   console.log('result', result);
+      dispatch(addMyOrder(result.data));
       dispatch(setCartItems([]));
       navigate('/order-placed');
     } catch (error) {
