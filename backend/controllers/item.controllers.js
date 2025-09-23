@@ -126,7 +126,7 @@ export const getItemsByCity = async (req, res) => {
 
     const shopIds = shops.map((shop) => shop._id);
 
-    const items = await Item.find({ shop: { $in: shopIds } });
+    const items = await Item.find({ shop: { $in: shopIds } }).populate('shop');
     return res.status(200).json(items);
   } catch (error) {
     return res
