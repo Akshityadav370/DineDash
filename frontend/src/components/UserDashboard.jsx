@@ -184,6 +184,11 @@ const UserDashboard = () => {
         <h1 className='text-gray-800 text-2xl sm:text-3xl'>
           Suggested Food Items
         </h1>
+        <div className='w-full h-auto flex flex-wrap gap-[20px] justify-center'>
+          {itemsInMyCity?.map((item, index) => (
+            <FoodCard key={index} data={item} />
+          ))}
+        </div>
       </div>
     </div>
   );
