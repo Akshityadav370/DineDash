@@ -13,6 +13,7 @@ import axios from 'axios';
 import { setLocation, setMapAddress } from '../redux/mapSlice';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { serverUrl } from '../App';
 
 function RecenterMap({ location }) {
   const map = useMap();
@@ -28,8 +29,6 @@ const CheckOut = () => {
 
   const { location, mapAddress } = useSelector((state) => state.map);
   const { cartItems, totalAmount } = useSelector((state) => state.user);
-
-  console.log('cartItems', cartItems);
 
   const apiKey = import.meta.env.VITE_GEOAPIFY_KEY;
   const deliveryFee = totalAmount > 500 ? 0 : 40;
@@ -85,6 +84,29 @@ const CheckOut = () => {
       dispatch(setLocation({ lat: latitude, lon: longitude }));
       getAddressByLatLng(latitude, longitude);
     });
+  };
+
+  const handlePlaceOrder = async () => {
+    try {
+      await axios.post(
+        `${serverUrl}/api/order/place-order`,
+        {
+          paymentMethod,
+          deliveryAddress: {
+            text: addressInput,
+            latitude: location.lat,
+            longitude: location.lon,
+          },
+          totalAmount,
+          cartItems,
+        },
+        { withCredentials: true }
+      );
+      //   console.log('result', result);
+      navigate('/order-placed');
+    } catch (error) {
+      console.error('Place Order Error', error);
+    }
   };
 
   useEffect(() => {
@@ -235,9 +257,8 @@ const CheckOut = () => {
 
         <button
           className='w-full bg-[#ff4d2d] hover:bg-[#e64526] text-white py-3 rounded-xl font-semibold'
-          onClick={() => {}}
+          onClick={handlePlaceOrder}
         >
-          {' '}
           {paymentMethod == 'cod' ? 'Place Order' : 'Pay & Place Order'}
         </button>
       </div>
