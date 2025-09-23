@@ -13,6 +13,7 @@ import EditFoodItem from './pages/EditFoodItem';
 import CartPage from './pages/CartPage';
 import CheckOut from './pages/CheckOut';
 import OrderPlaced from './pages/OrderPlaced';
+import MyOrders from './pages/MyOrders';
 
 export const serverUrl = 'http://localhost:8000';
 
@@ -63,6 +64,10 @@ function App() {
       <Route
         path='/order-placed'
         element={userData ? <OrderPlaced /> : <Navigate to={'/signin'} />}
+      />
+      <Route
+        path='/my-orders'
+        element={userData ? <MyOrders /> : <Navigate to={'/signin'} />}
       />
     </Routes>
   );

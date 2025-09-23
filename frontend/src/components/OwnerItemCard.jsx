@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { serverUrl } from '../App';
 import { useDispatch } from 'react-redux';
 import { setMyShopData } from '../redux/ownerSlice';
+
 function OwnerItemCard({ data }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();

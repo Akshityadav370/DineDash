@@ -9,7 +9,7 @@ const useGetItemsInCity = () => {
   const { city } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchItemsInCity = async () => {
       try {
         if (!city) return;
         const result = await axios.get(
@@ -24,7 +24,7 @@ const useGetItemsInCity = () => {
         console.error('error fetching user', error);
       }
     };
-    fetchUser();
+    fetchItemsInCity();
   }, [city]);
 };
 

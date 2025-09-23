@@ -14,6 +14,7 @@ import { setLocation, setMapAddress } from '../redux/mapSlice';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { serverUrl } from '../App';
+import { setCartItems } from '../redux/userSlice';
 
 function RecenterMap({ location }) {
   const map = useMap();
@@ -103,6 +104,7 @@ const CheckOut = () => {
         { withCredentials: true }
       );
       //   console.log('result', result);
+      dispatch(setCartItems([]));
       navigate('/order-placed');
     } catch (error) {
       console.error('Place Order Error', error);
