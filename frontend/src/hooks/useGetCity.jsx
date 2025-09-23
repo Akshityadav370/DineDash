@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAddress, setCity, setState } from '../redux/userSlice';
+import { setLocation, setMapAddress } from '../redux/mapSlice';
 
 const useGetCity = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,14 @@ const useGetCity = () => {
       dispatch(setState(result?.data?.results[0].state));
       dispatch(
         setAddress(
+          result?.data?.results[0].address_line1 +
+            ', ' +
+            result?.data?.results[0].address_line2
+        )
+      );
+      dispatch(setLocation({ lat: latitude, lon: longitude }));
+      dispatch(
+        setMapAddress(
           result?.data?.results[0].address_line1 +
             ', ' +
             result?.data?.results[0].address_line2

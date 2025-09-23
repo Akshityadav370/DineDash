@@ -10,12 +10,9 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
+import { bgColor, borderColor, primaryColor } from '../utils/category';
 
 const SignUp = () => {
-  const primaryColor = '#ff4d2d';
-  const hoverColor = '#e64323';
-  const bgColor = '#fff9f6';
-  const borderColor = '#ddd';
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState('user');
   const navigate = useNavigate();

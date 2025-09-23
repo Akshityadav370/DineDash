@@ -47,7 +47,7 @@ const UserDashboard = () => {
     }
   };
 
-  const handleFilterByCategory = (category) => {};
+  const handleFilterByCategory = () => {};
 
   useEffect(() => {
     if (cateScrollRef.current) {
