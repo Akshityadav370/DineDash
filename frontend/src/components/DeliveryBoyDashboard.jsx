@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 const DeliveryBoyDashboard = () => {
   const { userData } = useSelector((state) => state.user);
   const [availableAssignments, setAvailableAssignments] = useState(null);
+  const [currentOrder, setCurrentOrder] = useState();
 
   const fetchMyAssignments = async () => {
     try {
@@ -15,12 +16,39 @@ const DeliveryBoyDashboard = () => {
       });
       setAvailableAssignments(result.data);
     } catch (error) {
-      console.error('error fetching delivery assignments', error);
+      console.error('Error fetching delivery assignments', error);
+    }
+  };
+
+  const acceptOrder = async (assignmentId) => {
+    try {
+      const result = await axios.get(
+        `${serverUrl}/api/order/accept-order/${assignmentId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log('result', result.data);
+    } catch (error) {
+      console.error('Error accepting order', error);
+    }
+  };
+
+  const getCurrentOrder = async () => {
+    try {
+      const result = await axios.get(
+        `${serverUrl}/api/order/get-my-current-order`,
+        { withCredentials: true }
+      );
+      setCurrentOrder(result.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
     fetchMyAssignments();
+    getCurrentOrder();
   }, [userData]);
 
   return (
@@ -37,46 +65,69 @@ const DeliveryBoyDashboard = () => {
             {userData.location.coordinates[0]}
           </p>
         </div>
+        {!currentOrder && (
+          <div className='bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100'>
+            <h1 className='text-lg font-bold mb-4 flex items-center gap-2'>
+              Available Orders
+            </h1>
 
-        <div className='bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100'>
-          <h1 className='text-lg font-bold mb-4 flex items-center gap-2'>
-            Available Orders
-          </h1>
-
-          <div className='space-y-4'>
-            {availableAssignments?.length > 0 ? (
-              availableAssignments.map((a, index) => (
-                <div
-                  className='relative border rounded-lg p-4 flex justify-between items-baseline-last'
-                  key={index}
-                >
-                  <div className='space-y-1'>
-                    <p className='text-sm font-semibold'>{a?.shopName}</p>
-                    <p className='text-sm text-gray-500 max-w-[80%]'>
-                      <p className='font-semibold underline'>
-                        Delivery Address:
-                      </p>
-                      {'\n'}
-                      {a?.deliveryAddress.text}
-                    </p>
-                    <p className='text-xs text-gray-400'>
-                      {a.items.length} items
-                    </p>
-                  </div>
-                  <button
-                    className='bg-orange-500 cursor-pointer text-white px-4 py-1 rounded-lg text-sm hover:bg-orange-600'
-                    onClick={() => {}}
+            <div className='space-y-4'>
+              {availableAssignments?.length > 0 ? (
+                availableAssignments.map((a, index) => (
+                  <div
+                    className='relative border rounded-lg p-4 flex justify-between items-baseline-last'
+                    key={index}
                   >
-                    Accept
-                  </button>
-                  <p className='absolute top-4 right-5'>₹ {a.subtotal}.00</p>
-                </div>
-              ))
-            ) : (
-              <p className='text-gray-400 text-sm'>No Available Orders</p>
-            )}
+                    <div className='space-y-1'>
+                      <p className='text-sm font-semibold'>{a?.shopName}</p>
+                      <p className='text-sm text-gray-500 max-w-[80%]'>
+                        <p className='font-semibold underline'>
+                          Delivery Address:
+                        </p>
+                        {'\n'}
+                        {a?.deliveryAddress.text}
+                      </p>
+                      <p className='text-xs text-gray-400'>
+                        {a.items.length} items
+                      </p>
+                    </div>
+                    <button
+                      className='bg-orange-500 cursor-pointer text-white px-4 py-1 rounded-lg text-sm hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-gray-600'
+                      onClick={() => acceptOrder(a.assignmentId)}
+                      disabled={currentOrder}
+                    >
+                      Accept
+                    </button>
+                    <p className='absolute top-4 right-5'>₹ {a.subtotal}.00</p>
+                  </div>
+                ))
+              ) : (
+                <p className='text-gray-400 text-sm'>No Available Orders</p>
+              )}
+            </div>
           </div>
-        </div>
+        )}
+
+        {currentOrder && (
+          <div className='bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100'>
+            <h2 className='text-lg font-bold mb-3'>📦 Current Order</h2>
+            <div className='border rounded-lg p-4 mb-3 relative'>
+              <p className='font-semibold text-sm'>
+                {currentOrder?.shopOrder.shop.name}
+              </p>
+              <p className='text-sm text-gray-500'>
+                {currentOrder.deliveryAddress.text}
+              </p>
+              <p className='text-xs text-gray-400'>
+                {currentOrder.shopOrder.shopOrderItems.length} items
+                {/* {currentOrder.shopOrder.subtotal} */}
+              </p>
+              <p className='absolute top-2 right-2 text-sm'>
+                ₹ {currentOrder.shopOrder.subtotal}.00
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

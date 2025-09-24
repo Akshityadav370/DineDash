@@ -112,6 +112,11 @@ function OwnerOrderCard({ data }) {
                 {b.fullName} - {b.mobile}
               </div>
             ))
+          ) : data.shopOrders.assignedDeliveryBoy ? (
+            <div>
+              {data.shopOrders.assignedDeliveryBoy.fullName} - +91{' '}
+              {data.shopOrders.assignedDeliveryBoy.mobile}
+            </div>
           ) : (
             <div>Waiting for delivery boy to accept!</div>
           )}

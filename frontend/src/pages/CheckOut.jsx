@@ -105,8 +105,8 @@ const CheckOut = () => {
       );
       //   console.log('result', result);
       dispatch(addMyOrder(result.data));
-      dispatch(setCartItems([]));
       navigate('/order-placed');
+      dispatch(setCartItems([]));
     } catch (error) {
       console.error('Place Order Error', error);
     }
@@ -259,7 +259,7 @@ const CheckOut = () => {
         </section>
 
         <button
-          className='w-full bg-[#ff4d2d] hover:bg-[#e64526] text-white py-3 rounded-xl font-semibold'
+          className='w-full bg-[#ff4d2d] cursor-pointer hover:bg-[#e64526] text-white py-3 rounded-xl font-semibold'
           onClick={handlePlaceOrder}
         >
           {paymentMethod == 'cod' ? 'Place Order' : 'Pay & Place Order'}
