@@ -19,3 +19,25 @@ export const getCurrentUser = async (req, res) => {
       .json({ message: `Get current user error: ${error}` });
   }
 };
+
+export const updateUserLocation = async (req, res) => {
+  try {
+    const { lat, lon } = req.body;
+
+    const user = await User.findByIdAndUpdate(req.userId, {
+      location: {
+        type: 'Point',
+        coordinates: [lon, lat],
+      },
+    });
+    if (!user) {
+      return res.status(404).json({ message: 'User is not found!' });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Update User Location error: ${error}` });
+  }
+};

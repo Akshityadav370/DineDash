@@ -14,6 +14,7 @@ import CartPage from './pages/CartPage';
 import CheckOut from './pages/CheckOut';
 import OrderPlaced from './pages/OrderPlaced';
 import MyOrders from './pages/MyOrders';
+import useUpdateLocation from './hooks/useUpdateLocation';
 
 export const serverUrl = 'http://localhost:8000';
 
@@ -21,6 +22,8 @@ function App() {
   useGetCurrentUser();
   useGetCity();
   useGetMyShop();
+  useUpdateLocation();
+
   const { userData } = useSelector((state) => state.user);
 
   return (
