@@ -3,11 +3,14 @@ import { useState } from 'react';
 import axios from 'axios';
 import { serverUrl } from '../App';
 import { useEffect } from 'react';
+import DeliveryBoyTracking from './DeliveryBoyTracking';
 
 const DeliveryBoyDashboard = () => {
   const { userData } = useSelector((state) => state.user);
   const [availableAssignments, setAvailableAssignments] = useState(null);
   const [currentOrder, setCurrentOrder] = useState();
+  const [showOtpBox, setShowOtpBox] = useState(false);
+  const [otp, setOtp] = useState();
 
   const fetchMyAssignments = async () => {
     try {
@@ -109,24 +112,58 @@ const DeliveryBoyDashboard = () => {
         )}
 
         {currentOrder && (
-          <div className='bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100'>
-            <h2 className='text-lg font-bold mb-3'>📦 Current Order</h2>
-            <div className='border rounded-lg p-4 mb-3 relative'>
-              <p className='font-semibold text-sm'>
-                {currentOrder?.shopOrder.shop.name}
-              </p>
-              <p className='text-sm text-gray-500'>
-                {currentOrder.deliveryAddress.text}
-              </p>
-              <p className='text-xs text-gray-400'>
-                {currentOrder.shopOrder.shopOrderItems.length} items
-                {/* {currentOrder.shopOrder.subtotal} */}
-              </p>
-              <p className='absolute top-2 right-2 text-sm'>
-                ₹ {currentOrder.shopOrder.subtotal}.00
-              </p>
+          <>
+            <div className='bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100'>
+              <h2 className='text-lg font-bold mb-3'>📦 Current Order</h2>
+              <div className='border rounded-lg p-4 mb-3 relative'>
+                <p className='font-semibold text-sm mb-1'>
+                  {currentOrder?.shopOrder.shop.name}
+                </p>
+                <p className='text-sm text-gray-500'>
+                  {currentOrder.deliveryAddress.text}
+                </p>
+                <p className='text-xs text-gray-400'>
+                  {currentOrder.shopOrder.shopOrderItems.length} items
+                  {/* {currentOrder.shopOrder.subtotal} */}
+                </p>
+                <p className='absolute top-2 right-2 text-sm'>
+                  ₹ {currentOrder.shopOrder.subtotal}.00
+                </p>
+              </div>
+              <DeliveryBoyTracking data={currentOrder} />
+              {!showOtpBox ? (
+                <button
+                  className='mt-4 w-full cursor-pointer bg-green-500 text-white font-semibold py-2 px-4 rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200'
+                  onClick={() => setShowOtpBox(true)}
+                >
+                  'Mark As Delivered'
+                </button>
+              ) : (
+                <div className='mt-4 p-4 border rounded-xl bg-gray-50'>
+                  <p className='text-sm font-semibold mb-2'>
+                    Enter Otp send to{' '}
+                    <span className='text-orange-500 capitalize'>
+                      {currentOrder.user.fullName}
+                    </span>
+                  </p>
+                  <input
+                    type='text'
+                    className='w-full border px-3 py-2 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-orange-400'
+                    placeholder='Enter OTP'
+                    onChange={(e) => setOtp(e.target.value)}
+                    value={otp}
+                  />
+
+                  <button
+                    className='w-full cursor-pointer bg-orange-500 text-white py-2 rounded-lg font-semibold hover:bg-orange-600 transition-all'
+                    onClick={() => setShowOtpBox(false)}
+                  >
+                    Submit OTP
+                  </button>
+                </div>
+              )}
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>

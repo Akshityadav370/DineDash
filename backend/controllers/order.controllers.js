@@ -304,7 +304,7 @@ export const getMyCurrentOrder = async (req, res) => {
           { path: 'shopOrders.shop', select: 'name' },
         ],
       });
-    console.log('assignment', assignment);
+
     if (!assignment) {
       return res.status(400).json({ message: 'Assignment not found!' });
     }
@@ -315,7 +315,6 @@ export const getMyCurrentOrder = async (req, res) => {
     const shopOrder = assignment.order.shopOrders.find(
       (so) => String(so._id) == String(assignment.shopOrderId)
     );
-    console.log('shopOrder', shopOrder);
     if (!shopOrder) {
       return res.status(400).json({ message: 'shopOrder not found' });
     }
