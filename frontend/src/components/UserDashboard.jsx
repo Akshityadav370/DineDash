@@ -4,6 +4,8 @@ import { categories } from '../utils/category';
 import CategoryCard from './CategoryCard';
 import { FaCircleChevronLeft } from 'react-icons/fa6';
 import { FaCircleChevronRight } from 'react-icons/fa6';
+import { PiBowlFoodDuotone } from 'react-icons/pi';
+import { GiFoodTruck } from 'react-icons/gi';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import useGetShopsInCity from '../hooks/useGetShopsInCity';
@@ -19,6 +21,7 @@ const UserDashboard = () => {
   const [showRightCateButton, setShowRightCateButton] = useState(false);
   const [showLeftShopButton, setShowLeftShopButton] = useState(false);
   const [showRightShopButton, setShowRightShopButton] = useState(false);
+  const [updatedItemsList, setUpdatedItemsList] = useState([]);
 
   const { city, shopsInMyCity, itemsInMyCity } = useSelector(
     (state) => state.user
@@ -47,7 +50,16 @@ const UserDashboard = () => {
     }
   };
 
-  const handleFilterByCategory = () => {};
+  const handleFilterByCategory = (category) => {
+    if (category == 'All') {
+      setUpdatedItemsList(itemsInMyCity);
+    } else {
+      const filteredList = itemsInMyCity?.filter(
+        (i) => i.category === category
+      );
+      setUpdatedItemsList(filteredList);
+    }
+  };
 
   useEffect(() => {
     if (cateScrollRef.current) {
@@ -100,6 +112,10 @@ const UserDashboard = () => {
       });
     };
   }, []);
+
+  useEffect(() => {
+    setUpdatedItemsList(itemsInMyCity);
+  }, [itemsInMyCity]);
 
   return (
     <div className='w-screen min-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-y-auto'>
@@ -178,6 +194,21 @@ const UserDashboard = () => {
             </button>
           )}
         </div>
+        {shopsInMyCity && shopsInMyCity.length === 0 && (
+          <div className='text-center w-full mt-5 justify-center items-center content-center'>
+            <GiFoodTruck
+              className='mx-auto opacity-80'
+              color={'#ff4d2d'}
+              size={60}
+            />
+            <h2 className='text-[#ff4d2d] text-lg opacity-75'>
+              All restaurants are closed!
+            </h2>
+            <p className='text-[#bf6656]'>
+              Please hold on...! Until someone opens the shop.
+            </p>
+          </div>
+        )}
       </div>
       {/* Items */}
       <div className='w-full max-w-6xl flex flex-col gap-5 items-start p-[10px]'>
@@ -185,9 +216,24 @@ const UserDashboard = () => {
           Suggested Food Items
         </h1>
         <div className='w-full h-auto flex flex-wrap gap-[20px] justify-center'>
-          {itemsInMyCity?.map((item, index) => (
+          {updatedItemsList?.map((item, index) => (
             <FoodCard key={index} data={item} />
           ))}
+          {updatedItemsList && updatedItemsList.length === 0 && (
+            <div className='text-center mt-5 justify-center items-center content-center'>
+              <PiBowlFoodDuotone
+                className='mx-auto opacity-80'
+                color={'#ff4d2d'}
+                size={60}
+              />
+              <h2 className='text-[#ff4d2d] text-lg opacity-75'>
+                Dishes are still being prepared!
+              </h2>
+              <p className='text-[#bf6656]'>
+                You can try other category foods in the mean time!
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
