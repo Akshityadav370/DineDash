@@ -3,6 +3,15 @@ import Order from '../models/order.model.js';
 import Shop from '../models/shop.model.js';
 import User from '../models/user.model.js';
 import { sendOtpMail } from '../utils/mail.js';
+import Razorpay from 'razorpay';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+let instance = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 export const placeOrder = async (req, res) => {
   try {
@@ -57,6 +66,29 @@ export const placeOrder = async (req, res) => {
       })
     );
 
+    if (paymentMethod === 'online') {
+      const razorOrder = await instance.orders.create({
+        amount: Math.round(totalAmount * 100),
+        currency: 'INR',
+        receipt: `receipt_${Date.now()}`,
+      });
+
+      const newOrder = await Order.create({
+        user: req.userId,
+        paymentMethod,
+        deliveryAddress,
+        totalAmount,
+        shopOrders,
+        razorpayOrderId: razorOrder.id,
+        payment: false,
+      });
+
+      return res.status(200).json({
+        razorOrder,
+        orderId: newOrder._id,
+      });
+    }
+
     const newOrder = await Order.create({
       user: req.userId,
       paymentMethod,
@@ -75,6 +107,34 @@ export const placeOrder = async (req, res) => {
     return res.status(200).json(newOrder);
   } catch (error) {
     return res.status(500).json({ message: `Place order error ${error}!` });
+  }
+};
+
+export const verifyPayment = async (req, res) => {
+  try {
+    const { razorpay_payment_id, orderId } = req.body;
+
+    const payment = await instance.payments.fetch(razorpay_payment_id);
+    if (!payment || payment.status !== 'captured') {
+      return res.status(400).json({ message: 'Payment not captured' });
+    }
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(400).json({ message: 'Order not found' });
+    }
+
+    order.payment = true;
+    order.razorpayPaymentId = razorpay_payment_id;
+    await order.save();
+
+    await order.populate('shopOrders.shopOrderItems.item', 'name image price');
+    await order.populate('shopOrders.shop', 'name');
+    await order.populate('user', 'name email mobile');
+
+    return res.status(200).json(order);
+  } catch (error) {
+    return res.status(500).json({ message: `Verify payment error ${error}` });
   }
 };
 
@@ -105,6 +165,7 @@ export const getMyOrders = async (req, res) => {
         shopOrders: order.shopOrders.find((o) => o.owner._id == req.userId),
         createdAt: order.createdAt,
         deliveryAddress: order.deliveryAddress,
+        payment: order.payment,
       }));
 
       return res.status(200).json(filteredOrders);

@@ -97,18 +97,54 @@ const CheckOut = () => {
             latitude: location.lat,
             longitude: location.lon,
           },
-          totalAmount,
+          totalAmount: AmountWithDeliveryFee,
           cartItems,
         },
         { withCredentials: true }
       );
-      //   console.log('result', result);
-      dispatch(addMyOrder(result.data));
-      navigate('/order-placed');
-      dispatch(setCartItems([]));
+      if (paymentMethod === 'cod') {
+        dispatch(addMyOrder(result.data));
+        navigate('/order-placed');
+        dispatch(setCartItems([]));
+      } else {
+        const orderId = result.data.orderId;
+        const razorOrder = result.data.razorOrder;
+        openRazorpayWindow(orderId, razorOrder);
+      }
     } catch (error) {
       console.error('Place Order Error', error);
     }
+  };
+
+  const openRazorpayWindow = (orderId, razorOrder) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: razorOrder.amount,
+      currency: 'INR',
+      name: 'DineDash',
+      description: 'Food Delivery Website',
+      order_id: razorOrder.id,
+      handler: async function (response) {
+        try {
+          const result = await axios.post(
+            `${serverUrl}/api/order/verify-payment`,
+            {
+              razorpay_payment_id: response.razorpay_payment_id,
+              orderId,
+            },
+            { withCredentials: true }
+          );
+          dispatch(addMyOrder(result.data));
+          navigate('/order-placed');
+          dispatch(setCartItems([]));
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 
   useEffect(() => {
