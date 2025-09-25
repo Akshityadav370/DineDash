@@ -49,6 +49,40 @@ const DeliveryBoyDashboard = () => {
     }
   };
 
+  const sendOtp = async () => {
+    setShowOtpBox(true);
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/order/send-delivery-otp`,
+        {
+          orderId: currentOrder._id,
+          shopOrderId: currentOrder.shopOrder._id,
+        },
+        { withCredentials: true }
+      );
+      console.log('result', result.data);
+    } catch (error) {
+      console.log('Error sending otp', error);
+    }
+  };
+
+  const verifyOtp = async () => {
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/order/verify-delivery-otp`,
+        {
+          orderId: currentOrder._id,
+          shopOrderId: currentOrder.shopOrder._id,
+          otp,
+        },
+        { withCredentials: true }
+      );
+      console.log('result', result.data);
+    } catch (error) {
+      console.log('Error sending otp', error);
+    }
+  };
+
   useEffect(() => {
     fetchMyAssignments();
     getCurrentOrder();
@@ -134,7 +168,7 @@ const DeliveryBoyDashboard = () => {
               {!showOtpBox ? (
                 <button
                   className='mt-4 w-full cursor-pointer bg-green-500 text-white font-semibold py-2 px-4 rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200'
-                  onClick={() => setShowOtpBox(true)}
+                  onClick={sendOtp}
                 >
                   'Mark As Delivered'
                 </button>
@@ -156,7 +190,7 @@ const DeliveryBoyDashboard = () => {
 
                   <button
                     className='w-full cursor-pointer bg-orange-500 text-white py-2 rounded-lg font-semibold hover:bg-orange-600 transition-all'
-                    onClick={() => setShowOtpBox(false)}
+                    onClick={verifyOtp}
                   >
                     Submit OTP
                   </button>

@@ -105,7 +105,7 @@ export const sendOtp = async (req, res) => {
 
     await user.save();
 
-    await sendOtpMail(email, otp);
+    await sendOtpMail(email, otp, 'Reset Your Password', 'password reset');
 
     return res.status(200).json({ message: 'OTP sent successfully!' });
   } catch (error) {
