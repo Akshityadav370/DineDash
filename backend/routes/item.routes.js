@@ -6,6 +6,7 @@ import {
   editItem,
   getItemById,
   getItemsByCity,
+  getItemsByShop,
 } from '../controllers/item.controllers.js';
 import { upload } from '../middlewares/multer.js';
 
@@ -16,5 +17,6 @@ itemRouter.post('/edit-item/:itemId', isAuth, upload.single('image'), editItem);
 itemRouter.get('/get-by-id/:itemId', isAuth, getItemById);
 itemRouter.get('/delete/:itemId', isAuth, deleteItem);
 itemRouter.get('/get-by-city/:city', isAuth, getItemsByCity);
+itemRouter.get('/get-by-shop/:shopId', isAuth, getItemsByShop);
 
 export default itemRouter;
