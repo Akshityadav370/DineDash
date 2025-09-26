@@ -10,6 +10,7 @@ const DeliveryBoyDashboard = () => {
   const [availableAssignments, setAvailableAssignments] = useState(null);
   const [currentOrder, setCurrentOrder] = useState();
   const [showOtpBox, setShowOtpBox] = useState(false);
+  const [deliveryBoyLocation, setDeliveryBoyLocation] = useState(null);
   const [otp, setOtp] = useState();
 
   const fetchMyAssignments = async () => {
@@ -97,6 +98,34 @@ const DeliveryBoyDashboard = () => {
     };
   }, [socket]);
 
+  useEffect(() => {
+    if (userData.role !== 'deliveryBoy' || !socket) return;
+
+    let watchId;
+    if (navigator.geolocation) {
+      (watchId = navigator.geolocation.watchPosition((position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        setDeliveryBoyLocation({ lat: latitude, lon: longitude });
+        socket.emit('updateLocation', {
+          latitude,
+          longitude,
+          userId: userData._id,
+        });
+      })),
+        (error) => {
+          console.log(error);
+        },
+        {
+          enableHighAccuracy: true,
+        };
+    }
+
+    return () => {
+      if (watchId) navigator.geolocation.clearWatch(watchId);
+    };
+  }, [socket, userData]);
+
   return (
     <div className='w-screen min-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-y-auto'>
       <div className='w-full max-w-[800px] flex flex-col gap-5 items-center'>
@@ -106,9 +135,9 @@ const DeliveryBoyDashboard = () => {
           </h1>
           <p className='text-[#ff4d2d] '>
             <span className='font-semibold'>Latitude:</span>{' '}
-            {userData.location.coordinates[1]}{' '}
+            {deliveryBoyLocation?.lat},{' '}
             <span className='font-semibold'>Longitude:</span>{' '}
-            {userData.location.coordinates[0]}
+            {deliveryBoyLocation?.lon}
           </p>
         </div>
         {!currentOrder && (
@@ -173,7 +202,18 @@ const DeliveryBoyDashboard = () => {
                   ₹ {currentOrder.shopOrder.subtotal}.00
                 </p>
               </div>
-              <DeliveryBoyTracking data={currentOrder} />
+              <DeliveryBoyTracking
+                data={{
+                  deliveryBoyLocation: deliveryBoyLocation || {
+                    lat: userData.location.coordinates[1],
+                    lon: userData.location.coordinates[0],
+                  },
+                  customerLocation: {
+                    lat: currentOrder.deliveryAddress.latitude,
+                    lon: currentOrder.deliveryAddress.longitude,
+                  },
+                }}
+              />
               {!showOtpBox ? (
                 <button
                   className='mt-4 w-full cursor-pointer bg-green-500 text-white font-semibold py-2 px-4 rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200'
