@@ -82,11 +82,21 @@ const userSlice = createSlice({
     },
     updateOrderStatus: (state, action) => {
       const { orderId, shopId, status } = action.payload;
-      const order = state.myOrders.find((o) => o._id == orderId);
+      const order = state.myOrders.find((o) => o._id === orderId);
 
       if (order) {
-        if (order.shopOrders && order.shopOrders.shop._id == shopId) {
+        if (order.shopOrders && order.shopOrders.shop._id === shopId) {
           order.shopOrders.status = status;
+        }
+      }
+    },
+    updateRealtimeOrderStatus: (state, action) => {
+      const { orderId, shopId, status } = action.payload;
+      const order = state.myOrders.find((o) => o._id === orderId);
+      if (order) {
+        const shopOrder = order.shopOrders.find((so) => so.shop._id === shopId);
+        if (shopOrder) {
+          shopOrder.status = status;
         }
       }
     },
@@ -119,5 +129,6 @@ export const {
   setDeliveryAssignments,
   setSearchItems,
   setSocket,
+  updateRealtimeOrderStatus,
 } = userSlice.actions;
 export default userSlice.reducer;
