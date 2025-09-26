@@ -20,6 +20,7 @@ import Shop from './pages/Shop';
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { setSocket } from './redux/userSlice';
+import useGetMyOrders from './hooks/useGetMyOrders';
 
 export const serverUrl = 'http://localhost:8000';
 
@@ -28,6 +29,7 @@ function App() {
   useGetCity();
   useGetMyShop();
   useUpdateLocation();
+  useGetMyOrders();
 
   const { userData } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -43,7 +45,7 @@ function App() {
         socketInstance.emit('identity', { userId: userData._id });
       }
     });
-    
+
     return () => {
       socketInstance.disconnect();
     };

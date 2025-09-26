@@ -102,7 +102,27 @@ export const placeOrder = async (req, res) => {
       'name image price'
     );
     await newOrder.populate('shopOrders.shop', 'name');
+    await newOrder.populate('shopOrders.owner', 'name socketId');
     await newOrder.populate('user', 'name email mobile');
+
+    const io = req.app.get('io');
+
+    if (io) {
+      newOrder.shopOrders.forEach((shopOrder) => {
+        const ownerSocketId = shopOrder.owner.socketId;
+        if (ownerSocketId) {
+          io.to(ownerSocketId).emit('newOrder', {
+            _id: newOrder._id,
+            paymentMethod: newOrder.paymentMethod,
+            user: newOrder.user,
+            shopOrders: shopOrder,
+            createdAt: newOrder.createdAt,
+            deliveryAddress: newOrder.deliveryAddress,
+            payment: newOrder.payment,
+          });
+        }
+      });
+    }
 
     return res.status(200).json(newOrder);
   } catch (error) {
@@ -130,7 +150,27 @@ export const verifyPayment = async (req, res) => {
 
     await order.populate('shopOrders.shopOrderItems.item', 'name image price');
     await order.populate('shopOrders.shop', 'name');
+    await order.populate('shopOrders.owner', 'name socketId');
     await order.populate('user', 'name email mobile');
+
+    const io = req.app.get('io');
+
+    if (io) {
+      order.shopOrders.forEach((shopOrder) => {
+        const ownerSocketId = shopOrder.owner.socketId;
+        if (ownerSocketId) {
+          io.to(ownerSocketId).emit('newOrder', {
+            _id: order._id,
+            paymentMethod: order.paymentMethod,
+            user: order.user,
+            shopOrders: shopOrder,
+            createdAt: order.createdAt,
+            deliveryAddress: order.deliveryAddress,
+            payment: order.payment,
+          });
+        }
+      });
+    }
 
     return res.status(200).json(order);
   } catch (error) {
