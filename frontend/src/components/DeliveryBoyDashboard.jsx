@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import DeliveryBoyTracking from './DeliveryBoyTracking';
 
 const DeliveryBoyDashboard = () => {
-  const { userData } = useSelector((state) => state.user);
+  const { userData, socket } = useSelector((state) => state.user);
   const [availableAssignments, setAvailableAssignments] = useState(null);
   const [currentOrder, setCurrentOrder] = useState();
   const [showOtpBox, setShowOtpBox] = useState(false);
@@ -87,6 +87,15 @@ const DeliveryBoyDashboard = () => {
     fetchMyAssignments();
     getCurrentOrder();
   }, [userData]);
+
+  useEffect(() => {
+    socket.on('newAssignment', (data) => {
+      setAvailableAssignments((prev) => [...prev, data]);
+    });
+    return () => {
+      socket.off('newAssignment');
+    };
+  }, [socket]);
 
   return (
     <div className='w-screen min-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-y-auto'>
