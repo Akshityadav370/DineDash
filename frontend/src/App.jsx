@@ -22,7 +22,7 @@ import { io } from 'socket.io-client';
 import { setSocket } from './redux/userSlice';
 import useGetMyOrders from './hooks/useGetMyOrders';
 
-export const serverUrl = 'http://localhost:8000';
+export const serverUrl = 'https://dinedash-backend-rz1a.onrender.com';
 
 function App() {
   useGetCurrentUser();

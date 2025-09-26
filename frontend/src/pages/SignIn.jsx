@@ -14,6 +14,7 @@ import { bgColor, borderColor, primaryColor } from '../utils/category';
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showFeatures, setShowFeatures] = useState(false);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -66,7 +67,7 @@ const SignIn = () => {
 
   return (
     <div
-      className='min-h-screen w-full flex items-center justify-center p-4'
+      className='min-h-screen w-full flex items-center justify-center p-4 relative'
       style={{ backgroundColor: bgColor }}
     >
       <div
@@ -155,6 +156,265 @@ const SignIn = () => {
           <span className='text-[#ff4d2d]'>Sign Up</span>
         </p>
       </div>
+      <div
+        className={`hidden lg:block rounded-lg w-full max-w-md p-4 absolute top-10 left-5`}
+      >
+        <h3
+          className='text-lg font-semibold mb-3'
+          style={{ color: primaryColor }}
+        >
+          🚀 Project Features
+        </h3>
+        <ul className='space-y-2 text-sm'>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>Role-based Authentication (Sign in & Sign up)</span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>Google OAuth Integration</span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>
+              <strong>Forgot Password with OTP Verification</strong>
+            </span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>Order Placement & Management System</span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>Restaurant Owner Dashboard</span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>Delivery Personnel Interface</span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>
+              <strong>OTP Verification for Order Delivery</strong>
+            </span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>
+              <strong>Real-time Socket.io Events & Notifications</strong>
+            </span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>
+              <strong>Razorpay Payment Gateway Integration</strong>
+            </span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>Item Rating & Review System</span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>Advanced Search & Filter Functionality For Food Items</span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>
+              <strong>Realtime delivery tracking of the order for user</strong>
+            </span>
+          </li>
+          <li className='flex items-start'>
+            <span className='text-green-500 mr-2'>✓</span>
+            <span>Delivery Boy earning stats</span>
+          </li>
+        </ul>
+
+        <div className='mt-5'>
+          <h3
+            className='text-lg font-semibold mb-3'
+            style={{ color: primaryColor }}
+          >
+            🔨 Testing Credentials
+          </h3>
+          <ul className='space-y-2 text-sm'>
+            <li className='flex flex-col'>
+              <span className='font-bold'>Owner</span>
+              <span>owner@gmail.com</span>
+              <span>1234567890</span>
+            </li>
+            <li className='flex flex-col'>
+              <span className='font-bold'>Delivery Boy</span>
+              <span>deliveryBoy@gmail.com</span>
+              <span>1234567890</span>
+            </li>
+            <li className='flex flex-col'>
+              <span className='font-bold'>User</span>
+              <span>user@gmail.com</span>
+              <span>1234567890</span>
+            </li>
+          </ul>
+          <ul className='space-y-2 text-sm mt-5'>
+            <li className='flex flex-col'>
+              <span className='font-bold'>Note</span>
+              <span>
+                Your requested to create your own valid user email for testing{' '}
+                <strong>Forgot Password</strong> &{' '}
+                <strong>Order Delivery</strong> feature, as you shall receive
+                OTP on this email!
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <button
+        onClick={() => setShowFeatures(!showFeatures)}
+        className='lg:hidden fixed bottom-6 right-6 bg-white border-2 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200'
+        style={{
+          borderColor: primaryColor,
+          color: primaryColor,
+        }}
+      >
+        <svg
+          className='w-6 h-6'
+          fill='none'
+          stroke='currentColor'
+          viewBox='0 0 24 24'
+        >
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth={2}
+            d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+          />
+        </svg>
+      </button>
+      {showFeatures && (
+        <div className='lg:hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'>
+          <div className='bg-white rounded-lg w-full max-w-md p-6 max-h-[80vh] overflow-y-auto'>
+            <div className='flex justify-between items-center mb-4'>
+              <span></span>
+              <button
+                onClick={() => setShowFeatures(false)}
+                className='text-gray-500 hover:text-gray-700 text-2xl'
+              >
+                ×
+              </button>
+            </div>
+            <h3
+              className='text-lg font-semibold mb-3'
+              style={{ color: primaryColor }}
+            >
+              🚀 Project Features
+            </h3>
+            <ul className='space-y-2 text-sm'>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>Role-based Authentication (Sign in & Sign up)</span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>Google OAuth Integration</span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>
+                  <strong>Forgot Password with OTP Verification</strong>
+                </span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>Order Placement & Management System</span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>Restaurant Owner Dashboard</span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>Delivery Personnel Interface</span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>
+                  <strong>OTP Verification for Order Delivery</strong>
+                </span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>
+                  <strong>Real-time Socket.io Events & Notifications</strong>
+                </span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>
+                  <strong>Razorpay Payment Gateway Integration</strong>
+                </span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>Item Rating & Review System</span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>
+                  Advanced Search & Filter Functionality For Food Items
+                </span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>
+                  <strong>
+                    Realtime delivery tracking of the order for user
+                  </strong>
+                </span>
+              </li>
+              <li className='flex items-start'>
+                <span className='text-green-500 mr-2'>✓</span>
+                <span>Delivery Boy earning stats</span>
+              </li>
+            </ul>
+
+            <div className='mt-5'>
+              <h3
+                className='text-lg font-semibold mb-3'
+                style={{ color: primaryColor }}
+              >
+                🔨 Testing Credentials
+              </h3>
+              <ul className='space-y-2 text-sm'>
+                <li className='flex flex-col'>
+                  <span className='font-bold'>Owner</span>
+                  <span>owner@gmail.com</span>
+                  <span>1234567890</span>
+                </li>
+                <li className='flex flex-col'>
+                  <span className='font-bold'>Delivery Boy</span>
+                  <span>deliveryBoy@gmail.com</span>
+                  <span>1234567890</span>
+                </li>
+                <li className='flex flex-col'>
+                  <span className='font-bold'>User</span>
+                  <span>user@gmail.com</span>
+                  <span>1234567890</span>
+                </li>
+              </ul>
+              <ul className='space-y-2 text-sm mt-5'>
+                <li className='flex flex-col'>
+                  <span className='font-bold'>Note</span>
+                  <span>
+                    Your requested to create your own valid user email for
+                    testing <strong>Forgot Password</strong> &{' '}
+                    <strong>Order Delivery</strong> feature, as you shall
+                    receive OTP on this email!
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
