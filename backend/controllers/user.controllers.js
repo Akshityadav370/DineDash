@@ -1,3 +1,4 @@
+import Item from '../models/item.model.js';
 import User from '../models/user.model.js';
 
 export const getCurrentUser = async (req, res) => {
