@@ -8,6 +8,7 @@ import { FaPlus } from 'react-icons/fa';
 import { FaShoppingCart } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../redux/userSlice';
+import toast from 'react-hot-toast';
 
 const FoodCard = ({ data }) => {
   const [quantity, setQuantity] = useState(0);
@@ -91,6 +92,7 @@ const FoodCard = ({ data }) => {
             <FaPlus size={12} />
           </button>
           <button
+            disabled={quantity === 0}
             className={`${
               cartItems.some((i) => i.id == data._id)
                 ? 'bg-[#ff4d2d]'
@@ -99,6 +101,7 @@ const FoodCard = ({ data }) => {
                 : 'bg-gray-800'
             } text-white px-3 py-2 transition-colors`}
             onClick={() => {
+              toast('🛒 Added to cart!');
               quantity > 0
                 ? dispatch(
                     addToCart({

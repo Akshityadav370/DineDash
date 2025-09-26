@@ -14,6 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 import { ClipLoader } from 'react-spinners';
+import toast from 'react-hot-toast';
 
 const DeliveryBoyDashboard = () => {
   const { userData, socket } = useSelector((state) => state.user);
@@ -78,6 +79,7 @@ const DeliveryBoyDashboard = () => {
         },
         { withCredentials: true }
       );
+      toast.success('OTP sent to user mail!');
       setShowOtpBox(true);
     } catch (error) {
       console.log(error);

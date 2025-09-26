@@ -53,6 +53,11 @@ const MyOrders = () => {
               <OwnerOrderCard data={order} key={index} />
             ) : null
           )}
+          {myOrders?.length === 0 && (
+            <div className='text-center'>
+              <h2 className='text-[#ff4d2d]'>Empty Orders! 😟</h2>
+            </div>
+          )}
         </div>
       </div>
     </div>
