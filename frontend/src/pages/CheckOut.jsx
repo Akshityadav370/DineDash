@@ -102,7 +102,7 @@ const CheckOut = () => {
         },
         { withCredentials: true }
       );
-      if (paymentMethod === 'cod') {
+      if (paymentMethod == 'cod') {
         dispatch(addMyOrder(result.data));
         navigate('/order-placed');
         dispatch(setCartItems([]));

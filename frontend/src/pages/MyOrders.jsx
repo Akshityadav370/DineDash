@@ -20,7 +20,9 @@ const MyOrders = () => {
     });
 
     socket?.on('update-status', ({ orderId, shopId, status, userId }) => {
+      //   console.log('recieved status', { orderId, shopId, status, userId });
       if (userId === userData._id) {
+        // console.log('updating status');
         dispatch(updateRealtimeOrderStatus({ orderId, shopId, status }));
       }
     });

@@ -18,7 +18,7 @@ function UserOrderCard({ data }) {
 
   const handleRating = async (itemId, rating) => {
     try {
-      const result = await axios.post(
+      await axios.post(
         `${serverUrl}/api/item/rating`,
         { itemId, rating },
         { withCredentials: true }
@@ -50,7 +50,13 @@ function UserOrderCard({ data }) {
             </p>
           )}
 
-          <p className='font-medium text-blue-600 capitalize'>
+          <p
+            className={`font-medium ${
+              data.shopOrders?.[0].status !== 'delivered'
+                ? 'text-blue-600'
+                : 'text-green-600'
+            } capitalize`}
+          >
             {data.shopOrders?.[0].status}
           </p>
         </div>
@@ -100,7 +106,13 @@ function UserOrderCard({ data }) {
           </div>
           <div className='flex justify-between items-center border-t pt-2 border-dashed'>
             <p className='font-semibold'>Subtotal: {shopOrder.subtotal}</p>
-            <span className='text-sm font-medium text-blue-600 capitalize'>
+            <span
+              className={`text-sm font-medium ${
+                shopOrder.status !== 'delivered'
+                  ? 'text-blue-600'
+                  : 'text-green-600'
+              }  capitalize`}
+            >
               {shopOrder.status}
             </span>
           </div>

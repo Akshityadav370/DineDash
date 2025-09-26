@@ -4,6 +4,16 @@ import axios from 'axios';
 import { serverUrl } from '../App';
 import { useEffect } from 'react';
 import DeliveryBoyTracking from './DeliveryBoyTracking';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import { ClipLoader } from 'react-spinners';
 
 const DeliveryBoyDashboard = () => {
   const { userData, socket } = useSelector((state) => state.user);
@@ -12,6 +22,16 @@ const DeliveryBoyDashboard = () => {
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [deliveryBoyLocation, setDeliveryBoyLocation] = useState(null);
   const [otp, setOtp] = useState();
+  const [todayDeliveries, setTodayDeliveries] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const ratePerDelivery = 50;
+  const totalEarning = todayDeliveries.reduce(
+    (sum, d) => sum + d.count * ratePerDelivery,
+    0
+  );
 
   const fetchMyAssignments = async () => {
     try {
@@ -21,20 +41,6 @@ const DeliveryBoyDashboard = () => {
       setAvailableAssignments(result.data);
     } catch (error) {
       console.error('Error fetching delivery assignments', error);
-    }
-  };
-
-  const acceptOrder = async (assignmentId) => {
-    try {
-      const result = await axios.get(
-        `${serverUrl}/api/order/accept-order/${assignmentId}`,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log('result', result.data);
-    } catch (error) {
-      console.error('Error accepting order', error);
     }
   };
 
@@ -50,10 +56,21 @@ const DeliveryBoyDashboard = () => {
     }
   };
 
-  const sendOtp = async () => {
-    setShowOtpBox(true);
+  const acceptOrder = async (assignmentId) => {
     try {
-      const result = await axios.post(
+      await axios.get(`${serverUrl}/api/order/accept-order/${assignmentId}`, {
+        withCredentials: true,
+      });
+      await getCurrentOrder();
+    } catch (error) {
+      console.error('Error accepting order', error);
+    }
+  };
+
+  const sendOtp = async () => {
+    setLoading(true);
+    try {
+      await axios.post(
         `${serverUrl}/api/order/send-delivery-otp`,
         {
           orderId: currentOrder._id,
@@ -61,13 +78,17 @@ const DeliveryBoyDashboard = () => {
         },
         { withCredentials: true }
       );
-      console.log('result', result.data);
+      setShowOtpBox(true);
     } catch (error) {
-      console.log('Error sending otp', error);
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const verifyOtp = async () => {
+    setMessage('');
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/order/verify-delivery-otp`,
@@ -78,7 +99,22 @@ const DeliveryBoyDashboard = () => {
         },
         { withCredentials: true }
       );
-      console.log('result', result.data);
+      setMessage(result.data.message);
+      location.reload();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTodayDeliveries = async () => {
+    try {
+      const result = await axios.get(
+        `${serverUrl}/api/order/get-today-deliveries`,
+        { withCredentials: true }
+      );
+      setTodayDeliveries(result.data);
     } catch (error) {
       console.log('Error sending otp', error);
     }
@@ -87,6 +123,7 @@ const DeliveryBoyDashboard = () => {
   useEffect(() => {
     fetchMyAssignments();
     getCurrentOrder();
+    getTodayDeliveries();
   }, [userData]);
 
   useEffect(() => {
@@ -139,6 +176,33 @@ const DeliveryBoyDashboard = () => {
             <span className='font-semibold'>Longitude:</span>{' '}
             {deliveryBoyLocation?.lon}
           </p>
+        </div>
+        <div className='bg-white rounded-2xl shadow-md p-5 w-[90%] mb-6 border border-orange-100'>
+          <h1 className='text-lg font-bold mb-3 text-[#ff4d2d] '>
+            Today Deliveries
+          </h1>
+
+          <ResponsiveContainer width='100%' height={200}>
+            <BarChart data={todayDeliveries}>
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='hour' tickFormatter={(h) => `${h}:00`} />
+              <YAxis allowDecimals={false} />
+              <Tooltip
+                formatter={(value) => [value, 'orders']}
+                labelFormatter={(label) => `${label}:00`}
+              />
+              <Bar dataKey='count' fill='#ff4d2d' />
+            </BarChart>
+          </ResponsiveContainer>
+
+          <div className='max-w-sm mx-auto mt-6 p-6 bg-white rounded-2xl shadow-lg text-center'>
+            <h1 className='text-xl font-semibold text-gray-800 mb-2'>
+              Today's Earning
+            </h1>
+            <span className='text-3xl font-bold text-green-600'>
+              ₹{totalEarning}
+            </span>
+          </div>
         </div>
         {!currentOrder && (
           <div className='bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100'>
@@ -216,10 +280,15 @@ const DeliveryBoyDashboard = () => {
               />
               {!showOtpBox ? (
                 <button
-                  className='mt-4 w-full cursor-pointer bg-green-500 text-white font-semibold py-2 px-4 rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200'
+                  className='mt-4 w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200'
                   onClick={sendOtp}
+                  disabled={loading}
                 >
-                  'Mark As Delivered'
+                  {loading ? (
+                    <ClipLoader size={20} color='white' />
+                  ) : (
+                    'Mark As Delivered'
+                  )}
                 </button>
               ) : (
                 <div className='mt-4 p-4 border rounded-xl bg-gray-50'>
@@ -236,10 +305,16 @@ const DeliveryBoyDashboard = () => {
                     onChange={(e) => setOtp(e.target.value)}
                     value={otp}
                   />
+                  {message && (
+                    <p className='text-center text-green-400 text-2xl mb-4'>
+                      {message}
+                    </p>
+                  )}
 
                   <button
                     className='w-full cursor-pointer bg-orange-500 text-white py-2 rounded-lg font-semibold hover:bg-orange-600 transition-all'
                     onClick={verifyOtp}
+                    disabled={loading}
                   >
                     Submit OTP
                   </button>

@@ -14,7 +14,9 @@ const Nav = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { userData, city, cartItems } = useSelector((state) => state.user);
+  const { userData, city, cartItems, myOrders } = useSelector(
+    (state) => state.user
+  );
   const { myShopData } = useSelector((state) => state.owner);
 
   const [showInfo, setShowInfo] = useState(false);
@@ -168,7 +170,11 @@ const Nav = () => {
                 My Orders
               </span>
               <span className='absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]'>
-                0
+                {
+                  myOrders.filter(
+                    (order) => order.shopOrders.status !== 'delivered'
+                  ).length
+                }
               </span>
             </div>
             <div
@@ -177,7 +183,11 @@ const Nav = () => {
             >
               <TbReceipt2 size={20} />
               <span className='absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]'>
-                0
+                {
+                  myOrders.filter(
+                    (order) => order.shopOrders.status !== 'delivered'
+                  ).length
+                }
               </span>
             </div>
           </>

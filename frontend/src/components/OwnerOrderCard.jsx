@@ -77,7 +77,13 @@ function OwnerOrderCard({ data }) {
       <div className='flex justify-between items-center mt-auto pt-3 border-t border-gray-100'>
         <span className='text-sm'>
           Status:{' '}
-          <span className='font-semibold capitalize text-[#ff4d2d]'>
+          <span
+            className={`font-semibold capitalize ${
+              data.shopOrders.status !== 'delivered'
+                ? 'text-[#ff4d2d]'
+                : 'text-green-600'
+            }`}
+          >
             {data.shopOrders.status}
           </span>
         </span>
