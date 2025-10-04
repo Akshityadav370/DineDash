@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 || error.response?.status === 404) {
       // Clear token and redirect to login
       localStorage.removeItem('token');
-      window.location.href = '/signin';
+      // window.location.href = '/signin';
     }
     return Promise.reject(error);
   }
