@@ -254,6 +254,9 @@ const SignIn = () => {
               <span className='font-bold'>Owner</span>
               <span>owner@gmail.com</span>
               <span>1234567890</span>
+              <br />
+              <span>owner2@gmail.com</span>
+              <span>1234567890</span>
             </li>
             <li className='flex flex-col'>
               <span className='font-bold'>Delivery Boy</span>

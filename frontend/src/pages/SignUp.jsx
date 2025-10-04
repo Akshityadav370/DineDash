@@ -11,6 +11,7 @@ import { auth } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
 import { bgColor, borderColor, primaryColor } from '../utils/category';
+import toast from 'react-hot-toast';
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -49,6 +50,7 @@ const SignUp = () => {
         localStorage.setItem('token', result.data.token);
       }
 
+      toast.success('Signup successful');
       dispatch(setUserData(result.data.user));
     } catch (error) {
       console.error('Error signup', error);
