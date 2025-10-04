@@ -9,8 +9,11 @@ const ownerSlice = createSlice({
     setMyShopData: (state, action) => {
       state.myShopData = action.payload;
     },
+    clearOwnerData: (state) => {
+      state.myShopData = null;
+    },
   },
 });
 
-export const { setMyShopData } = ownerSlice.actions;
+export const { setMyShopData, clearOwnerData } = ownerSlice.actions;
 export default ownerSlice.reducer;

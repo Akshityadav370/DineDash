@@ -8,6 +8,12 @@ const useGetCurrentUser = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        // No token, don't make the request
+        return;
+      }
+
       try {
         const result = await axiosInstance.get('/api/user/current');
         // console.log('result getCurrentUser', result);

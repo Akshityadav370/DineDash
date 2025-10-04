@@ -109,6 +109,16 @@ const userSlice = createSlice({
     setSocket: (state, action) => {
       state.socket = action.payload;
     },
+    clearUserData: (state) => {
+      state.userData = '';
+      state.shopsInMyCity = null;
+      state.itemsInMyCity = null;
+      state.cartItems = [];
+      state.totalAmount = 0;
+      state.myOrders = [];
+      state.availableAssignments = null;
+      state.searchItems = null;
+    },
   },
 });
 
@@ -130,5 +140,6 @@ export const {
   setSearchItems,
   setSocket,
   updateRealtimeOrderStatus,
+  clearUserData,
 } = userSlice.actions;
 export default userSlice.reducer;

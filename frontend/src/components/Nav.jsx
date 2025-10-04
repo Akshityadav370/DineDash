@@ -3,9 +3,10 @@ import { IoIosSearch } from 'react-icons/io';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import axiosInstance from '../utils/axiosConfig';
-import { setSearchItems, setUserData } from '../redux/userSlice';
+import { setSearchItems, clearUserData } from '../redux/userSlice';
+import { clearOwnerData } from '../redux/ownerSlice';
 import { FaPlus } from 'react-icons/fa6';
 import { TbReceipt2 } from 'react-icons/tb';
 
@@ -29,25 +30,31 @@ const Nav = () => {
       await axiosInstance.get('/api/auth/signout');
       // Clear token from localStorage
       localStorage.removeItem('token');
-      dispatch(setUserData(null));
+      // Clear all user-specific data from Redux
+      dispatch(clearUserData());
+      dispatch(clearOwnerData());
     } catch (error) {
       console.error('Error logging out', error);
-      // Clear token even if logout fails
+      // Clear token and data even if logout fails
       localStorage.removeItem('token');
-      dispatch(setUserData(null));
+      dispatch(clearUserData());
+      dispatch(clearOwnerData());
     }
   };
 
-  const handleSearchItems = async (searchQuery) => {
-    try {
-      const result = await axiosInstance.get(
-        `/api/item/search-items?query=${searchQuery}&city=${city}`
-      );
-      dispatch(setSearchItems(result.data));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const handleSearchItems = useCallback(
+    async (searchQuery) => {
+      try {
+        const result = await axiosInstance.get(
+          `/api/item/search-items?query=${searchQuery}&city=${city}`
+        );
+        dispatch(setSearchItems(result.data));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [city, dispatch]
+  );
 
   useEffect(() => {
     if (debounceRef.current) {
@@ -67,7 +74,7 @@ const Nav = () => {
         clearTimeout(debounceRef.current);
       }
     };
-  }, [query, city]);
+  }, [query, city, handleSearchItems, dispatch]);
 
   return (
     <div className='w-full h-[80px] flex items-center justify-between md:justify-center gap-[30px] px-[20px] fixed top-0 z-[999] bg-[#fff9f6] overflow-visible'>
