@@ -4,7 +4,7 @@ import { FaRegEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { serverUrl } from '../App';
+import { serverUrl } from '../constants/config';
 import Button from '../components/button';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
@@ -33,7 +33,13 @@ const SignIn = () => {
         email: result.user.email,
       });
       //   console.log('data', data);
-      dispatch(setUserData(data));
+
+      // Store token in localStorage for cross-domain requests
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+
+      dispatch(setUserData(data.user));
       setError(null);
     } catch (error) {
       console.error('Error google signup', error);
@@ -56,7 +62,13 @@ const SignIn = () => {
       );
       //   console.log('result signin', result);
       setError('');
-      dispatch(setUserData(result.data));
+
+      // Store token in localStorage for cross-domain requests
+      if (result.data.token) {
+        localStorage.setItem('token', result.data.token);
+      }
+
+      dispatch(setUserData(result.data.user));
     } catch (error) {
       console.error('Error signin', error);
       setError(error?.response?.data?.message);

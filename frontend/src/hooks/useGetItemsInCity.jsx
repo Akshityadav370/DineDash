@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setItemsInMyCity } from '../redux/userSlice';
-import { serverUrl } from '../App';
+import { serverUrl } from '../constants/config';
 
 const useGetItemsInCity = () => {
   const dispatch = useDispatch();

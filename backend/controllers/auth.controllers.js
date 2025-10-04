@@ -39,6 +39,7 @@ export const signUp = async (req, res) => {
       sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
+      domain: '.onrender.com',
     });
 
     return res.status(201).json(newUser);
@@ -73,9 +74,10 @@ export const signIn = async (req, res) => {
       sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
+      domain: '.onrender.com',
     });
 
-    return res.status(201).json(user);
+    return res.status(201).json({ user, token });
   } catch (error) {
     return res.status(500).json(`Signin error ${error}`);
   }
@@ -178,9 +180,10 @@ export const googleAuth = async (req, res) => {
       sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
+      domain: '.onrender.com',
     });
 
-    return res.status(201).json(user);
+    return res.status(201).json({ user, token });
   } catch (error) {
     return res.status(500).json(`Google Auth error ${error}`);
   }

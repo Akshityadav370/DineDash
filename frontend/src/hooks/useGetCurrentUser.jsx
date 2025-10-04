@@ -1,6 +1,5 @@
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import { useEffect } from 'react';
-import { serverUrl } from '../App';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
 
@@ -10,17 +9,17 @@ const useGetCurrentUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const result = await axios.get(`${serverUrl}/api/user/current`, {
-          withCredentials: true,
-        });
+        const result = await axiosInstance.get('/api/user/current');
         // console.log('result getCurrentUser', result);
         dispatch(setUserData(result.data));
       } catch (error) {
         console.error('error fetching user', error);
+        // Clear token if invalid
+        localStorage.removeItem('token');
       }
     };
     fetchUser();
-  }, []);
+  }, [dispatch]);
 };
 
 export default useGetCurrentUser;

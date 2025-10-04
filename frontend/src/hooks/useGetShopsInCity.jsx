@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setShopsInMyCity } from '../redux/userSlice';
-import { serverUrl } from '../App';
+import { serverUrl } from '../constants/config';
 
 const useGetShopsInCity = () => {
   const dispatch = useDispatch();

@@ -13,7 +13,7 @@ import axios from 'axios';
 import { setLocation, setMapAddress } from '../redux/mapSlice';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { serverUrl } from '../App';
+import { serverUrl } from '../constants/config';
 import { addMyOrder, setCartItems } from '../redux/userSlice';
 
 function RecenterMap({ location }) {

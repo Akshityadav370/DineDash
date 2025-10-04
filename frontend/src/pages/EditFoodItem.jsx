@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FaUtensils } from 'react-icons/fa';
 import { useState } from 'react';
 import axios from 'axios';
-import { serverUrl } from '../App';
+import { serverUrl } from '../constants/config';
 import { setMyShopData } from '../redux/ownerSlice';
 import { ClipLoader } from 'react-spinners';
 import { IoFastFood } from 'react-icons/io5';

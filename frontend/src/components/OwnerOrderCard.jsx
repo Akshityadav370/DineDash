@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { MdPhone } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { serverUrl } from '../App';
+import { serverUrl } from '../constants/config';
 import { updateOrderStatus } from '../redux/userSlice';
 import { useState } from 'react';
 

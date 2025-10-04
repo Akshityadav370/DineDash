@@ -22,7 +22,9 @@ import { io } from 'socket.io-client';
 import { setSocket } from './redux/userSlice';
 import useGetMyOrders from './hooks/useGetMyOrders';
 
-export const serverUrl = 'https://dinedash-backend-rz1a.onrender.com';
+import { serverUrl } from './constants/config';
+
+export { serverUrl };
 
 function App() {
   useGetCurrentUser();

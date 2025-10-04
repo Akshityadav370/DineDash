@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { serverUrl } from '../App';
+import { serverUrl } from '../constants/config';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';

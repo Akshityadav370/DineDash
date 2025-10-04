@@ -4,7 +4,7 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect, useRef } from 'react';
-import { serverUrl } from '../App';
+import { serverUrl } from '../constants/config';
 import axios from 'axios';
 import { setSearchItems, setUserData } from '../redux/userSlice';
 import { FaPlus } from 'react-icons/fa6';
@@ -30,9 +30,14 @@ const Nav = () => {
       await axios.get(`${serverUrl}/api/auth/signout`, {
         withCredentials: true,
       });
+      // Clear token from localStorage
+      localStorage.removeItem('token');
       dispatch(setUserData(null));
     } catch (error) {
       console.error('Error logging out', error);
+      // Clear token even if logout fails
+      localStorage.removeItem('token');
+      dispatch(setUserData(null));
     }
   };
 

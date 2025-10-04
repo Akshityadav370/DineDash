@@ -5,7 +5,7 @@ import { FaUtensils } from 'react-icons/fa';
 import { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import axios from 'axios';
-import { serverUrl } from '../App';
+import { serverUrl } from '../constants/config';
 import { setMyShopData } from '../redux/ownerSlice';
 
 const CreateEditShop = () => {

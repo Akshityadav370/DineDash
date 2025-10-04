@@ -1,12 +1,22 @@
 import jwt from 'jsonwebtoken';
 const isAuth = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    // Try to get token from cookies first, then from Authorization header
+    let token = req.cookies.token;
+
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+      }
+    }
+
     if (!token) {
       return res
         .status(404)
         .json({ message: 'Token not found! Unauthorised!' });
     }
+
     const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
     if (!decodeToken) {
       return res
