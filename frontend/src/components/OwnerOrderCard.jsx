@@ -1,7 +1,6 @@
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import { MdPhone } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { serverUrl } from '../constants/config';
 import { updateOrderStatus } from '../redux/userSlice';
 import { useState } from 'react';
 
@@ -11,10 +10,9 @@ function OwnerOrderCard({ data }) {
 
   const handleUpdateStatus = async (orderId, shopId, status) => {
     try {
-      const result = await axios.post(
-        `${serverUrl}/api/order/update-status/${orderId}/${shopId}`,
-        { status },
-        { withCredentials: true }
+      const result = await axiosInstance.post(
+        `/api/order/update-status/${orderId}/${shopId}`,
+        { status }
       );
 
       dispatch(updateOrderStatus({ orderId, shopId, status }));

@@ -1,6 +1,5 @@
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import { useEffect } from 'react';
-import { serverUrl } from '../constants/config';
 import { useSelector } from 'react-redux';
 
 function useUpdateLocation() {
@@ -8,11 +7,7 @@ function useUpdateLocation() {
 
   useEffect(() => {
     const updateLocation = async (lat, lon) => {
-      await axios.post(
-        `${serverUrl}/api/user/update-location`,
-        { lat, lon },
-        { withCredentials: true }
-      );
+      await axiosInstance.post('/api/user/update-location', { lat, lon });
       //   console.log(result.data);
     };
 

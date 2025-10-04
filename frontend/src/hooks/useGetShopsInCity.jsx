@@ -1,8 +1,7 @@
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setShopsInMyCity } from '../redux/userSlice';
-import { serverUrl } from '../constants/config';
 
 const useGetShopsInCity = () => {
   const dispatch = useDispatch();
@@ -12,12 +11,7 @@ const useGetShopsInCity = () => {
     const fetchShopsInCity = async () => {
       try {
         if (!city) return;
-        const result = await axios.get(
-          `${serverUrl}/api/shop/get-by-city/${city}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const result = await axiosInstance.get(`/api/shop/get-by-city/${city}`);
         // console.log('result getCurrentUser', result);
         dispatch(setShopsInMyCity(result.data));
       } catch (error) {

@@ -1,11 +1,10 @@
-import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { serverUrl } from '../constants/config';
 import { useEffect } from 'react';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import DeliveryBoyTracking from '../components/DeliveryBoyTracking';
 import { useSelector } from 'react-redux';
+import axiosInstance from '../utils/axiosConfig';
 
 const TrackOrder = () => {
   const { orderId } = useParams();
@@ -16,10 +15,7 @@ const TrackOrder = () => {
 
   const handleGetOrder = async () => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/order/get-by-id/${orderId}`,
-        { withCredentials: true }
-      );
+      const result = await axiosInstance.get(`/api/order/get-by-id/${orderId}`);
       setCurrentOrder(result.data);
     } catch (error) {
       console.log(error);

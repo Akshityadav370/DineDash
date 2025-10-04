@@ -9,12 +9,12 @@ import { FaMobileScreenButton } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import { setLocation, setMapAddress } from '../redux/mapSlice';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { serverUrl } from '../constants/config';
 import { addMyOrder, setCartItems } from '../redux/userSlice';
+import axios from 'axios';
 
 function RecenterMap({ location }) {
   const map = useMap();
@@ -88,20 +88,16 @@ const CheckOut = () => {
 
   const handlePlaceOrder = async () => {
     try {
-      const result = await axios.post(
-        `${serverUrl}/api/order/place-order`,
-        {
-          paymentMethod,
-          deliveryAddress: {
-            text: addressInput,
-            latitude: location.lat,
-            longitude: location.lon,
-          },
-          totalAmount: AmountWithDeliveryFee,
-          cartItems,
+      const result = await axiosInstance.post('/api/order/place-order', {
+        paymentMethod,
+        deliveryAddress: {
+          text: addressInput,
+          latitude: location.lat,
+          longitude: location.lon,
         },
-        { withCredentials: true }
-      );
+        totalAmount: AmountWithDeliveryFee,
+        cartItems,
+      });
       if (paymentMethod == 'cod') {
         dispatch(addMyOrder(result.data));
         navigate('/order-placed');
@@ -126,14 +122,10 @@ const CheckOut = () => {
       order_id: razorOrder.id,
       handler: async function (response) {
         try {
-          const result = await axios.post(
-            `${serverUrl}/api/order/verify-payment`,
-            {
-              razorpay_payment_id: response.razorpay_payment_id,
-              orderId,
-            },
-            { withCredentials: true }
-          );
+          const result = await axiosInstance.post('/api/order/verify-payment', {
+            razorpay_payment_id: response.razorpay_payment_id,
+            orderId,
+          });
           dispatch(addMyOrder(result.data));
           navigate('/order-placed');
           dispatch(setCartItems([]));

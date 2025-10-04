@@ -2,13 +2,11 @@ import React, { useEffect } from 'react';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaUtensils } from 'react-icons/fa';
 import { useState } from 'react';
-import axios from 'axios';
-import { serverUrl } from '../constants/config';
 import { setMyShopData } from '../redux/ownerSlice';
 import { ClipLoader } from 'react-spinners';
 import { IoFastFood } from 'react-icons/io5';
+import axiosInstance from '../utils/axiosConfig';
 
 function EditFoodItem() {
   const navigate = useNavigate();
@@ -56,10 +54,9 @@ function EditFoodItem() {
         formData.append('image', backendImage);
       }
 
-      const result = await axios.post(
-        `${serverUrl}/api/item/edit-item/${itemId}`,
-        formData,
-        { withCredentials: true }
+      const result = await axiosInstance.post(
+        `/api/item/edit-item/${itemId}`,
+        formData
       );
 
       dispatch(setMyShopData(result.data));
@@ -74,10 +71,7 @@ function EditFoodItem() {
   useEffect(() => {
     const handleGetItemById = async () => {
       try {
-        const result = await axios.get(
-          `${serverUrl}/api/item/get-by-id/${itemId}`,
-          { withCredentials: true }
-        );
+        const result = await axiosInstance.get(`/api/item/get-by-id/${itemId}`);
         setCurrentItem(result.data);
       } catch (error) {
         console.log(error);

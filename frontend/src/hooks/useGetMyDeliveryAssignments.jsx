@@ -1,6 +1,5 @@
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import { useEffect } from 'react';
-import { serverUrl } from '../constants/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDeliveryAssignments } from '../redux/userSlice';
 
@@ -11,12 +10,7 @@ const useGetMyDeliveryAssignments = () => {
   useEffect(() => {
     const fetchMyAssignments = async () => {
       try {
-        const result = await axios.get(
-          `${serverUrl}/api/order/get-assignments`,
-          {
-            withCredentials: true,
-          }
-        );
+        const result = await axiosInstance.get('/api/order/get-assignments');
         dispatch(setDeliveryAssignments(result.data));
       } catch (error) {
         console.error('error fetching delivery assignments', error);

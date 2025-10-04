@@ -4,8 +4,7 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect, useRef } from 'react';
-import { serverUrl } from '../constants/config';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import { setSearchItems, setUserData } from '../redux/userSlice';
 import { FaPlus } from 'react-icons/fa6';
 import { TbReceipt2 } from 'react-icons/tb';
@@ -27,9 +26,7 @@ const Nav = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get(`${serverUrl}/api/auth/signout`, {
-        withCredentials: true,
-      });
+      await axiosInstance.get('/api/auth/signout');
       // Clear token from localStorage
       localStorage.removeItem('token');
       dispatch(setUserData(null));
@@ -43,9 +40,8 @@ const Nav = () => {
 
   const handleSearchItems = async (searchQuery) => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/item/search-items?query=${searchQuery}&city=${city}`,
-        { withCredentials: true }
+      const result = await axiosInstance.get(
+        `/api/item/search-items?query=${searchQuery}&city=${city}`
       );
       dispatch(setSearchItems(result.data));
     } catch (error) {

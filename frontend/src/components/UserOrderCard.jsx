@@ -1,7 +1,6 @@
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { serverUrl } from '../constants/config';
 
 function UserOrderCard({ data }) {
   const navigate = useNavigate();
@@ -18,11 +17,7 @@ function UserOrderCard({ data }) {
 
   const handleRating = async (itemId, rating) => {
     try {
-      await axios.post(
-        `${serverUrl}/api/item/rating`,
-        { itemId, rating },
-        { withCredentials: true }
-      );
+      await axiosInstance.post('/api/item/rating', { itemId, rating });
       setSelectedRating((prev) => ({
         ...prev,
         [itemId]: rating,

@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { serverUrl } from '../constants/config';
+import axiosInstance from '../utils/axiosConfig';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -18,10 +17,7 @@ const Shop = () => {
 
   const handleShop = async () => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/item/get-by-shop/${shopId}`,
-        { withCredentials: true }
-      );
+      const result = await axiosInstance.get(`/api/item/get-by-shop/${shopId}`);
       setShop(result.data.shop);
       setItems(result.data.items);
     } catch (error) {

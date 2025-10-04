@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import axios from 'axios';
-import { serverUrl } from '../constants/config';
+import axiosInstance from '../utils/axiosConfig';
 import { useEffect } from 'react';
 import DeliveryBoyTracking from './DeliveryBoyTracking';
 import {
@@ -36,9 +35,7 @@ const DeliveryBoyDashboard = () => {
 
   const fetchMyAssignments = async () => {
     try {
-      const result = await axios.get(`${serverUrl}/api/order/get-assignments`, {
-        withCredentials: true,
-      });
+      const result = await axiosInstance.get(`/api/order/get-assignments`);
       setAvailableAssignments(result.data);
     } catch (error) {
       console.error('Error fetching delivery assignments', error);
@@ -47,10 +44,7 @@ const DeliveryBoyDashboard = () => {
 
   const getCurrentOrder = async () => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/order/get-my-current-order`,
-        { withCredentials: true }
-      );
+      const result = await axiosInstance.get(`/api/order/get-my-current-order`);
       setCurrentOrder(result.data);
     } catch (error) {
       console.log(error);
@@ -59,9 +53,7 @@ const DeliveryBoyDashboard = () => {
 
   const acceptOrder = async (assignmentId) => {
     try {
-      await axios.get(`${serverUrl}/api/order/accept-order/${assignmentId}`, {
-        withCredentials: true,
-      });
+      await axiosInstance.get(`/api/order/accept-order/${assignmentId}`);
       await getCurrentOrder();
     } catch (error) {
       console.error('Error accepting order', error);
@@ -71,14 +63,10 @@ const DeliveryBoyDashboard = () => {
   const sendOtp = async () => {
     setLoading(true);
     try {
-      await axios.post(
-        `${serverUrl}/api/order/send-delivery-otp`,
-        {
-          orderId: currentOrder._id,
-          shopOrderId: currentOrder.shopOrder._id,
-        },
-        { withCredentials: true }
-      );
+      await axiosInstance.post(`/api/order/send-delivery-otp`, {
+        orderId: currentOrder._id,
+        shopOrderId: currentOrder.shopOrder._id,
+      });
       toast.success('OTP sent to user mail!');
       setShowOtpBox(true);
     } catch (error) {
@@ -92,14 +80,13 @@ const DeliveryBoyDashboard = () => {
     setMessage('');
     setLoading(true);
     try {
-      const result = await axios.post(
-        `${serverUrl}/api/order/verify-delivery-otp`,
+      const result = await axiosInstance.post(
+        `/api/order/verify-delivery-otp`,
         {
           orderId: currentOrder._id,
           shopOrderId: currentOrder.shopOrder._id,
           otp,
-        },
-        { withCredentials: true }
+        }
       );
       setMessage(result.data.message);
       location.reload();
@@ -112,10 +99,7 @@ const DeliveryBoyDashboard = () => {
 
   const getTodayDeliveries = async () => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/order/get-today-deliveries`,
-        { withCredentials: true }
-      );
+      const result = await axiosInstance.get(`/api/order/get-today-deliveries`);
       setTodayDeliveries(result.data);
     } catch (error) {
       console.log('Error sending otp', error);

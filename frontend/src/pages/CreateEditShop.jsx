@@ -4,9 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { FaUtensils } from 'react-icons/fa';
 import { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
-import axios from 'axios';
-import { serverUrl } from '../constants/config';
 import { setMyShopData } from '../redux/ownerSlice';
+import axiosInstance from '../utils/axiosConfig';
 
 const CreateEditShop = () => {
   const navigate = useNavigate();
@@ -48,10 +47,9 @@ const CreateEditShop = () => {
         formData.append('image', backendImage);
       }
 
-      const result = await axios.post(
-        `${serverUrl}/api/shop/create-edit`,
-        formData,
-        { withCredentials: true }
+      const result = await axiosInstance.post(
+        `/api/shop/create-edit`,
+        formData
       );
 
       dispatch(setMyShopData(result.data));

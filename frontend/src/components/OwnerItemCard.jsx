@@ -1,9 +1,8 @@
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import React from 'react';
 import { FaPen } from 'react-icons/fa';
 import { FaTrashAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { serverUrl } from '../constants/config';
 import { useDispatch } from 'react-redux';
 import { setMyShopData } from '../redux/ownerSlice';
 
@@ -13,10 +12,7 @@ function OwnerItemCard({ data }) {
 
   const handleDelete = async () => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/item/delete/${data._id}`,
-        { withCredentials: true }
-      );
+      const result = await axiosInstance.get(`/api/item/delete/${data._id}`);
       dispatch(setMyShopData(result.data));
     } catch (error) {
       console.log(error);

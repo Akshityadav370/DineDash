@@ -3,10 +3,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
-import axios from 'axios';
-import { serverUrl } from '../constants/config';
 import { setMyShopData } from '../redux/ownerSlice';
 import { IoFastFood } from 'react-icons/io5';
+import axiosInstance from '../utils/axiosConfig';
 
 const AddFoodItem = () => {
   const navigate = useNavigate();
@@ -55,11 +54,7 @@ const AddFoodItem = () => {
         formData.append('image', backendImage);
       }
 
-      const result = await axios.post(
-        `${serverUrl}/api/item/add-item`,
-        formData,
-        { withCredentials: true }
-      );
+      const result = await axiosInstance.post(`/api/item/add-item`, formData);
 
       dispatch(setMyShopData(result.data));
       navigate('/');

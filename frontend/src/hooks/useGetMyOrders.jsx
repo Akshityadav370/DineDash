@@ -1,6 +1,5 @@
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig';
 import { useEffect } from 'react';
-import { serverUrl } from '../constants/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMyOrders } from '../redux/userSlice';
 
@@ -11,9 +10,7 @@ const useGetMyOrders = () => {
   useEffect(() => {
     const fetchMyOrders = async () => {
       try {
-        const result = await axios.get(`${serverUrl}/api/order/my-orders`, {
-          withCredentials: true,
-        });
+        const result = await axiosInstance.get('/api/order/my-orders');
         // console.log('result getCurrentUser', result);
         dispatch(setMyOrders(result.data));
       } catch (error) {
