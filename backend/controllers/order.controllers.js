@@ -534,18 +534,29 @@ export const sendOtp = async (req, res) => {
 
     await order.save();
 
-    await sendOtpMail(
-      order.user.email,
-      otp,
-      'Order Delivery OTP ✅',
-      'order delivery'
-    );
+    try {
+      await sendOtpMail(
+        order.user.email,
+        otp,
+        'Order Delivery OTP ✅',
+        'order delivery'
+      );
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+      return res.status(500).json({
+        message: `Failed to send OTP email. Please try again or contact support.`,
+        error: emailError.message
+      });
+    }
 
     return res
       .status(200)
       .json({ message: `OTP sent successfully to ${order?.user?.fullName}!` });
   } catch (error) {
-    return res.status(500).json(`Error in sending delivery OTP: ${error}`);
+    console.error('SendOtp error:', error);
+    return res.status(500).json({
+      message: `Error in sending delivery OTP: ${error.message}`
+    });
   }
 };
 

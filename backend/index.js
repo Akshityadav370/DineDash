@@ -21,12 +21,16 @@ const server = http.createServer(app);
 
 export const transporter = nodemailer.createTransport({
   service: 'Gmail',
-  port: 465,
-  secure: true,
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.GOOGLE_APP_PASSWORD,
   },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
 const io = new Server(server, {
