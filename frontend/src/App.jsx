@@ -50,8 +50,9 @@ function App() {
 
     return () => {
       socketInstance.disconnect();
+      dispatch(setSocket(null));
     };
-  }, [userData?._id]);
+  }, [userData?._id, userData, dispatch]);
 
   return (
     <Routes>

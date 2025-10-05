@@ -7,6 +7,7 @@ import { FaLocationDot } from 'react-icons/fa6';
 import { FaUtensils } from 'react-icons/fa';
 import { FaArrowLeft } from 'react-icons/fa';
 import FoodCard from '../components/FoodCard';
+import toast from 'react-hot-toast';
 
 const Shop = () => {
   const { shopId } = useParams();
@@ -21,7 +22,8 @@ const Shop = () => {
       setShop(result.data.shop);
       setItems(result.data.items);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 

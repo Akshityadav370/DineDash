@@ -50,7 +50,7 @@ const Nav = () => {
         );
         dispatch(setSearchItems(result.data));
       } catch (error) {
-        console.log(error);
+        console.error('Error searching items', error);
       }
     },
     [city, dispatch]

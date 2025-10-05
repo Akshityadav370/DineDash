@@ -14,7 +14,7 @@ const useGetMyShop = () => {
         // console.log('result getCurrentUser', result);
         dispatch(setMyShopData(result.data));
       } catch (error) {
-        console.error('error fetching user', error);
+        console.error('error fetching my shop data', error);
       }
     };
     fetchShop();

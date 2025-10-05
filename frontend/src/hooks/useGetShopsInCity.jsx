@@ -15,7 +15,7 @@ const useGetShopsInCity = () => {
         // console.log('result getCurrentUser', result);
         dispatch(setShopsInMyCity(result.data));
       } catch (error) {
-        console.error('error fetching user', error);
+        console.error('error fetching shops in city', error);
       }
     };
     fetchShopsInCity();

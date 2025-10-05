@@ -6,6 +6,7 @@ import { ClipLoader } from 'react-spinners';
 import { setMyShopData } from '../redux/ownerSlice';
 import { IoFastFood } from 'react-icons/io5';
 import axiosInstance from '../utils/axiosConfig';
+import toast from 'react-hot-toast';
 
 const AddFoodItem = () => {
   const navigate = useNavigate();
@@ -59,7 +60,8 @@ const AddFoodItem = () => {
       dispatch(setMyShopData(result.data));
       navigate('/');
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }

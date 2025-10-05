@@ -5,6 +5,7 @@ import { IoIosArrowRoundBack } from 'react-icons/io';
 import DeliveryBoyTracking from '../components/DeliveryBoyTracking';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../utils/axiosConfig';
+import toast from 'react-hot-toast';
 
 const TrackOrder = () => {
   const { orderId } = useParams();
@@ -18,7 +19,8 @@ const TrackOrder = () => {
       const result = await axiosInstance.get(`/api/order/get-by-id/${orderId}`);
       setCurrentOrder(result.data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 

@@ -11,9 +11,13 @@ function useUpdateLocation() {
       //   console.log(result.data);
     };
 
-    navigator.geolocation.watchPosition((pos) => {
+    let watchId = navigator.geolocation.watchPosition((pos) => {
       updateLocation(pos.coords.latitude, pos.coords.longitude);
     });
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
   }, [userData]);
 }
 

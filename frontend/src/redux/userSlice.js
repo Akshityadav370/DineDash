@@ -118,6 +118,7 @@ const userSlice = createSlice({
       state.myOrders = [];
       state.availableAssignments = null;
       state.searchItems = null;
+      state.socket = null;
     },
   },
 });

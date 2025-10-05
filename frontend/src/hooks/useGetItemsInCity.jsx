@@ -15,7 +15,7 @@ const useGetItemsInCity = () => {
         // console.log('result getCurrentUser', result);
         dispatch(setItemsInMyCity(result.data));
       } catch (error) {
-        console.error('error fetching user', error);
+        console.error('error fetching items in city', error);
       }
     };
     fetchItemsInCity();

@@ -1,16 +1,6 @@
-import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { transporter } from '../index.js';
 dotenv.config();
-
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.GOOGLE_APP_PASSWORD,
-  },
-});
 
 export const sendOtpMail = async (to, otp, subject, html) => {
   await transporter.sendMail({

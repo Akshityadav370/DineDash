@@ -57,6 +57,7 @@ const DeliveryBoyDashboard = () => {
       await getCurrentOrder();
     } catch (error) {
       console.error('Error accepting order', error);
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -70,7 +71,7 @@ const DeliveryBoyDashboard = () => {
       toast.success('OTP sent to user mail!');
       setShowOtpBox(true);
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -90,8 +91,10 @@ const DeliveryBoyDashboard = () => {
       );
       setMessage(result.data.message);
       location.reload();
+      toast.success('OTP verified successfully');
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -102,7 +105,8 @@ const DeliveryBoyDashboard = () => {
       const result = await axiosInstance.get(`/api/order/get-today-deliveries`);
       setTodayDeliveries(result.data);
     } catch (error) {
-      console.log('Error sending otp', error);
+      // console.log('Error sending otp', error);
+      console.error(error?.response?.data?.message);
     }
   };
 
@@ -206,10 +210,10 @@ const DeliveryBoyDashboard = () => {
                     <div className='space-y-1'>
                       <p className='text-sm font-semibold'>{a?.shopName}</p>
                       <p className='text-sm text-gray-500 max-w-[80%]'>
-                        <p className='font-semibold underline'>
+                        <span className='font-semibold underline'>
                           Delivery Address:
-                        </p>
-                        {'\n'}
+                        </span>
+                        <br />
                         {a?.deliveryAddress.text}
                       </p>
                       <p className='text-xs text-gray-400'>

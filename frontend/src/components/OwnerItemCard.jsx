@@ -5,6 +5,7 @@ import { FaTrashAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setMyShopData } from '../redux/ownerSlice';
+import toast from 'react-hot-toast';
 
 function OwnerItemCard({ data }) {
   const navigate = useNavigate();
@@ -15,7 +16,8 @@ function OwnerItemCard({ data }) {
       const result = await axiosInstance.get(`/api/item/delete/${data._id}`);
       dispatch(setMyShopData(result.data));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 

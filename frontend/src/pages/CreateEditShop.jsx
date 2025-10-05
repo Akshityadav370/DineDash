@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { setMyShopData } from '../redux/ownerSlice';
 import axiosInstance from '../utils/axiosConfig';
+import toast from 'react-hot-toast';
 
 const CreateEditShop = () => {
   const navigate = useNavigate();
@@ -56,7 +57,8 @@ const CreateEditShop = () => {
 
       navigate('/');
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }

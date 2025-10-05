@@ -14,7 +14,7 @@ const useGetMyOrders = () => {
         // console.log('result getCurrentUser', result);
         dispatch(setMyOrders(result.data));
       } catch (error) {
-        console.error('error fetching user', error);
+        console.error('error fetching my orders', error);
       }
     };
     fetchMyOrders();

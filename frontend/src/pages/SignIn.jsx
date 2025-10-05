@@ -11,6 +11,7 @@ import { auth } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
 import { bgColor, borderColor, primaryColor } from '../utils/category';
+import toast from 'react-hot-toast';
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -41,9 +42,10 @@ const SignIn = () => {
 
       dispatch(setUserData(data.user));
       setError(null);
+      toast.success('Google signin successful');
     } catch (error) {
-      console.error('Error google signup', error);
       setError(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -69,9 +71,11 @@ const SignIn = () => {
       }
 
       dispatch(setUserData(result.data.user));
+      toast.success('Signin successful');
     } catch (error) {
-      console.error('Error signin', error);
+      // console.error('Error signin', error);
       setError(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@ import { MdPhone } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { updateOrderStatus } from '../redux/userSlice';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 function OwnerOrderCard({ data }) {
   const dispatch = useDispatch();
@@ -19,7 +20,8 @@ function OwnerOrderCard({ data }) {
       setAvailableBoys(result.data.availableBoys);
       //   console.log(result.data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 

@@ -7,6 +7,7 @@ import { setMyShopData } from '../redux/ownerSlice';
 import { ClipLoader } from 'react-spinners';
 import { IoFastFood } from 'react-icons/io5';
 import axiosInstance from '../utils/axiosConfig';
+import toast from 'react-hot-toast';
 
 function EditFoodItem() {
   const navigate = useNavigate();
@@ -62,7 +63,8 @@ function EditFoodItem() {
       dispatch(setMyShopData(result.data));
       navigate('/');
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -74,7 +76,7 @@ function EditFoodItem() {
         const result = await axiosInstance.get(`/api/item/get-by-id/${itemId}`);
         setCurrentItem(result.data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
     handleGetItemById();

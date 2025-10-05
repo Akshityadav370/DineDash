@@ -1,5 +1,6 @@
 import axiosInstance from '../utils/axiosConfig';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 function UserOrderCard({ data }) {
@@ -23,7 +24,8 @@ function UserOrderCard({ data }) {
         [itemId]: rating,
       }));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 

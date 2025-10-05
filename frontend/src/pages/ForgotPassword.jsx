@@ -4,6 +4,7 @@ import Button from '../components/button';
 import { useNavigate } from 'react-router-dom';
 import { serverUrl } from '../constants/config';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -31,8 +32,9 @@ const ForgotPassword = () => {
       setError('');
       setStep(2);
     } catch (error) {
-      console.error('Error sending otp', error);
+      // console.error('Error sending otp', error);
       setError(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -41,7 +43,7 @@ const ForgotPassword = () => {
   const handleVerifyOtp = async () => {
     setLoading(true);
     try {
-      const result = await axios.post(
+      await axios.post(
         `${serverUrl}/api/auth/verify-otp`,
         {
           email,
@@ -49,11 +51,13 @@ const ForgotPassword = () => {
         },
         { withCredentials: true }
       );
-      console.log('otp verify', result);
+      // console.log('otp verify', result);
+      toast.success('OTP verified successfully');
       setStep(3);
       setError('');
     } catch (error) {
-      console.error('Error verify otp', error);
+      // console.error('Error verify otp', error);
+      toast.error(error?.response?.data?.message);
       setError(error?.response?.data?.message);
     } finally {
       setLoading(false);
@@ -66,7 +70,7 @@ const ForgotPassword = () => {
       return null;
     }
     try {
-      const result = await axios.post(
+      await axios.post(
         `${serverUrl}/api/auth/reset-password`,
         {
           email,
@@ -74,11 +78,14 @@ const ForgotPassword = () => {
         },
         { withCredentials: true }
       );
-      console.log('reset password', result);
+      // console.log('reset password', result);
+      toast.success('Password reset successfully');
       setError('');
+      navigate('/signin');
       //   setStep(3);
     } catch (error) {
-      console.error('Error sending otp', error);
+      // console.error('Error sending otp', error);
+      toast.error(error?.response?.data?.message);
       setError(error?.response?.data?.message);
     } finally {
       setLoading(false);

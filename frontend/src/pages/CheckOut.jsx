@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { addMyOrder, setCartItems } from '../redux/userSlice';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 function RecenterMap({ location }) {
   const map = useMap();
@@ -109,6 +110,7 @@ const CheckOut = () => {
       }
     } catch (error) {
       console.error('Place Order Error', error);
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -130,7 +132,8 @@ const CheckOut = () => {
           navigate('/order-placed');
           dispatch(setCartItems([]));
         } catch (error) {
-          console.log(error);
+          // console.log(error);
+          toast.error(error?.response?.data?.message);
         }
       },
     };
