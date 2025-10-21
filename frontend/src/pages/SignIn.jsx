@@ -33,7 +33,7 @@ const SignIn = () => {
       const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
         email: result.user.email,
       });
-      //   console.log('data', data);
+      console.log('data', data, JSON.stringify(data));
 
       // Store token in localStorage for cross-domain requests
       if (data.token) {
@@ -62,7 +62,7 @@ const SignIn = () => {
         },
         { withCredentials: true }
       );
-      //   console.log('result signin', result);
+      console.log('result signin', result, JSON.stringify(result));
       setError('');
 
       // Store token in localStorage for cross-domain requests
